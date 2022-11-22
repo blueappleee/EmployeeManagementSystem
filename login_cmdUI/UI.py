@@ -32,53 +32,68 @@ class general_UI(ABC):#abstract calss of differet UIs
     @abstractmethod
     def __init__(self):
         pass
-    def search(type):
+    def search(self,type):
         pass
-    def report_hours(none):
+    def report_hours(self,none):
         pass
-    def update_info(type):
+    def update_info(self,type):
         pass
-    def get_query(sql):
+    def get_query(self,sql):
         pass
 
 class employee_UI(general_UI):
     def __init__(self,uid):
         self.query = {}
         self.uid = uid
-    def search(type):
-        {'uid':' ' ,'username':' '}
+        self.command_dict = {'search': self.search, 'update': self.update_info, 'report' : self.report_hours, }
+        self.cmd_UI()
+    def terminate(self,type):
+        print("System terminates...")
+        sys.exit(0)
+    def search(self,type):
+        keys = {'uid':' ' ,'username':' '}
         if type == 'uid':
+            searchtype = 'uid'
             searchkey = input('enter the userID:')
         elif type == 'username':
+            searchtype = 'username'
             searchkey = input('enter the username: ')
         else:
             print("invlid type, please enter again.")
             return
+        keys[searchtype] = searchkey
+        #using this to connect to deeper layer
         #Left to implement...
         #connect to actor class use the *search* variable to search
-    def update_info(type):
+    def update_info(self,type):
         #left to implement
         return
-    def report_hours(none):
+    def report_hours(self,length):
         #left to implement
         return
-    def get_query(sql):
-        return 
-    def cmd_UI():
+    def get_query(self,sql):
+        return
+    def cmd_UI(self):
         while True:#ask for user input and map to the functions
-            command = input("command: ")
-            break
-        return
+            command = input("command: ").split()
+            if(len(command) != 2):
+                print('Invalid format, should be ***search [key_type = uid/usrname]***, and other stuffs dont know yet\n')
+                continue
+            if command[0] in self.command_dict:#map input commnad to command functions
+                self.command_dict[command[0]](command[1])
+            else:
+                print('invalid command, you can choose ....... need to decide\n')
+        
 
 
     
 class manager_UI(employee_UI):
-    def assign_team(type):
+    def assign_team(self,type):
         return
-    def assign_project(type):
+    def assign_project(self,type):
         return
 
 class admin_UI(employee_UI):
-    def register_employee(type):
+    def register_employee(self,type):
         pass
 
