@@ -1,0 +1,49 @@
+SET GLOBAL validate_password.policy = 0;
+
+CREATE USER IF NOT EXISTS 'empManagement'@'localhost' IDENTIFIED BY 'testpassss';
+
+CREATE DATABASE IF NOT EXISTS empManagementdb;
+
+USE empManagementdb;
+
+CREATE TABLE IF NOT EXISTS employeeIndex(employeeID CHAR(6) NOT NULL, password VARCHAR(32) NOT NULL, empType CHAR(3) NOT NULL, PRIMARY KEY(employeeID));
+
+CREATE TABLE IF NOT EXISTS employee(employeeID CHAR(6) NOT NULL, teamID CHAR(4), managerID CHAR(6), fName VARCHAR(20) NOT NULL, lNAME VARCHAR(20) NOT NULL, salary INT NOT NULL, position VARCHAR(40) NOT NULL, startDate DATE NOT NULL, birthDate DATE, sickDaysYearly SMALLINT NOT NULL, sickDaysRemaining SMALLINT, vacationDaysYearly SMALLINT NOT NULL, vacationDaysRemaining SMALLINT, address VARCHAR(50), phoneNumber VARCHAR(10), workEmail VARCHAR(40) NOT NULL, personalEmail VARCHAR(40), directDepositNumber CHAR(15), ssn CHAR(9) NOT NULL, PRIMARY KEY(employeeID));
+
+CREATE TABLE IF NOT EXISTS manager(employeeID CHAR(6) NOT NULL, teamID CHAR(4), teamManagedID CHAR(4), managerID CHAR(6), fName VARCHAR(20) NOT NULL, lNAME VARCHAR(20) NOT NULL, salary INT NOT NULL, position VARCHAR(40) NOT NULL, startDate DATE NOT NULL, birthDate DATE, sickDaysYearly SMALLINT NOT NULL, sickDaysRemaining SMALLINT, vacationDaysYearly SMALLINT NOT NULL, vacationDaysRemaining SMALLINT, address VARCHAR(50), phoneNumber VARCHAR(10), workEmail VARCHAR(40) NOT NULL, personalEmail VARCHAR(40), directDepositNumber CHAR(15), ssn CHAR(9) NOT NULL, PRIMARY KEY(employeeID));
+
+CREATE TABLE IF NOT EXISTS empManaged(managerID CHAR(6) NOT NULL, employeeID CHAR(6) NOT NULL, PRIMARY KEY(managerID, employeeID));
+
+CREATE TABLE IF NOT EXISTS team(teamID CHAR(4) NOT NULL, teamManagerID CHAR(6), projectID CHAR(8), teamName VARCHAR(20), PRIMARY KEY(teamID));
+
+CREATE TABLE IF NOT EXISTS teamHoursWorked(teamID CHAR(4) NOT NULL, projectID CHAR(8) NOT NULL, hourAmount INT NOT NULL, PRIMARY KEY(teamID, projectID));
+
+CREATE TABLE IF NOT EXISTS teamMembers(teamID CHAR(4) NOT NULL, employeeID CHAR(6) NOT NULL, PRIMARY KEY(teamID, employeeID));
+
+CREATE TABLE IF NOT EXISTS project(projectID CHAR(8) NOT NULL , projectName VARCHAR(20), currentTeamID CHAR(4), projectStatus VARCHAR(20), PRIMARY KEY(projectID));
+
+CREATE TABLE IF NOT EXISTS hoursWorked(employeeID CHAR(6) NOT NULL, hourType CHAR(1) NOT NULL, hourAmount TINYINT NOT NULL, workDate DATE NOT NULL, PRIMARY KEY(employeeID, hourType, workDate));
+
+ALTER TABLE employee ADD CONSTRAINT FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE SET NULL;
+ALTER TABLE employee ADD CONSTRAINT FOREIGN KEY (managerID) REFERENCES manager(employeeID) ON DELETE SET NULL;
+
+ALTER TABLE manager ADD CONSTRAINT FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE SET NULL;
+ALTER TABLE manager ADD CONSTRAINT FOREIGN KEY (managerID) REFERENCES manager(employeeID) ON DELETE SET NULL;
+ALTER TABLE manager ADD CONSTRAINT FOREIGN KEY (teamManagedID) REFERENCES team(teamID) ON DELETE SET NULL;
+
+ALTER TABLE empManaged ADD CONSTRAINT FOREIGN KEY (managerID) REFERENCES manager(employeeID) ON DELETE CASCADE;
+ALTER TABLE empManaged ADD CONSTRAINT FOREIGN KEY (employeeID) REFERENCES employee(employeeID) ON DELETE CASCADE; 
+
+ALTER TABLE team ADD CONSTRAINT FOREIGN KEY (teamManagerID) REFERENCES manager(employeeID) ON DELETE RESTRICT;
+ALTER TABLE team ADD CONSTRAINT FOREIGN KEY(projectID) REFERENCES project(projectID) ON DELETE SET NULL; 
+
+ALTER TABLE teamMembers ADD CONSTRAINT FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE CASCADE;
+ALTER TABLE teamMembers ADD CONSTRAINT FOREIGN KEY (employeeID) REFERENCES employee(employeeID) ON DELETE CASCADE; 
+
+ALTER TABLE project ADD CONSTRAINT FOREIGN KEY currentTeamID REFERENCES team(teamID) ON DELETE SET NULL;
+
+ALTER TABLE hoursWorked ADD CONSTRAINT FOREIGN KEY (employeeID) REFERENCES employee(employeeID) ON DELETE CASCADE; 
+
+GRANT ALL ON empManagementdb.* TO 'empManagement'@'localhost';
+
+FLUSH PRIVILEGES;
