@@ -1,33 +1,14 @@
+import sys
 from abc import ABC, abstractmethod
-import mysql.connector
-import signal,  sys
+from Business_Logic import EmployeeController as ec
 
-
-
-
-class UI_generator():#a factory for creating different(access level) UI
-    def generate(self, level, uid):
-        generator = get_generator(level)
-        return generator(uid)
-
-def get_generator(level):
-    if level == 'E':
-        return generate_employeeUI
-    elif level == 'M':
-        return generate_managerUI
-    elif level == 'A':
-        return generate_adminUI
-    else:
-        print(f"Undefined access level, please contact system admin.")
-        sys.exit(0)
-
-def generate_employeeUI(uid):#employee factory
-    return employee_UI(uid)
-def generate_managerUI(uid):#manager factory
-    return manager_UI(uid)
-def generate_adminUI(uid):#admin factory
-    return admin_UI(uid)
-
+def input_shoe_be_num(string) -> int:
+    while not string.isnumeric():
+        string = input("enter an valid numer: ")
+    return int(string)
+"""
+Parent abstract class for all UIs
+"""
 class general_UI(ABC):#abstract calss of differet UIs
     @abstractmethod
     def __init__(self):
@@ -46,7 +27,9 @@ class employee_UI(general_UI):
         self.query = {}
         self.uid = uid
         self.command_dict = {'search': self.search, 'update': self.update_info, 'report' : self.report_hours, }
-        self.cmd_UI()
+        self.dataobject = None
+    def assignDataObject(self,data):
+        self.dataobject = data
     def terminate(self,type):
         print("System terminates...")
         sys.exit(0)
@@ -65,10 +48,15 @@ class employee_UI(general_UI):
         #using this to connect to deeper layer
         #Left to implement...
         #connect to actor class use the *search* variable to search
-    def update_info(self,type):
-        #left to implement
+    def update_info(self,attribute):
+        changed_attribute = input("changed value: ")
+        self.dataobject.attribute =  attribute #this line need fuether detailc for dataobject INFO
+        ec.EmployeeController.updateEmployeeInformation(self.dataobject)
         return
-    def report_hours(self,length):
+    def report_hours(self,worktype):
+        workTime = input("Enter work hours: ")
+        workTime = input_shoe_be_num(workTime)
+        ec.EmployeeController.logWorkHours(self.dataobject,worktype,workTime)
         #left to implement
         return
     def get_query(self,sql):
@@ -83,17 +71,3 @@ class employee_UI(general_UI):
                 self.command_dict[command[0]](command[1])
             else:
                 print('invalid command, you can choose ....... need to decide\n')
-        
-
-
-    
-class manager_UI(employee_UI):
-    def assign_team(self,type):
-        return
-    def assign_project(self,type):
-        return
-
-class admin_UI(employee_UI):
-    def register_employee(self,type):
-        pass
-

@@ -1,4 +1,7 @@
-import UI, sys, pyfiglet, signal
+import  sys, pyfiglet, signal
+from Business_Logic import EmployeeController as ec
+from UI_factory import UI_generator
+
 
 def Destruct(signum,frame):
     print("\nlog out.")
@@ -11,13 +14,18 @@ def main():
     print(ascii_banner)
     uid = input("enter user ID: ")
     pwd = input("enter user password: ")
-    #query uid and pwd 
-    #left to implement.....
-    #if either not found,notify then ask for inupt
-    #if not match, notify then ask for input
-    userAccessLevel = "E" #base on the query info
-    UIgenerate = UI.UI_generator()
+    employee  = ec.EmployeeController.getEmployeeById(uid)
+    """
+    query uid and pwd 
+    left to implement.....
+    if either not found,notify then ask for inupt
+    if not match, notify then ask for input
+    """
+    userAccessLevel = "E" #shuold be employee.level something
+    UIgenerate = UI_generator()
     cmdUI = UIgenerate.generate(userAccessLevel,uid)
+    cmdUI.assignDataObject(employee)
+    cmdUI.cmd_UI()
     
 
 
