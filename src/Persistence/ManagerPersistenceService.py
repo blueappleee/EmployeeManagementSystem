@@ -17,8 +17,15 @@ class ManagerPersistenceService:
     Logic to correct a team employee's work hours
     """
     @staticmethod
-    def correctTeamEmployeeWorkHours(teamEmployeeId):
-        pass
+    def correctTeamEmployeeWorkHours(teamEmployeeId, workHours):
+        cur = dbConnection.connection.cursor()
+
+        try:
+            cur.execute("UPDATE hoursWorked SET hourAmount = " + workHours + "WHERE employeeID = " + teamEmployeeId)
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+        dbConnection.connection.close()
 
     """
     Get summary stats on team's employees
