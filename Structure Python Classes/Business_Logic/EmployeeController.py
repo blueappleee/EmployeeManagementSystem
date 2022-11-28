@@ -1,5 +1,5 @@
-from Employee import Employee
-from EmployeePersistenceService import EmployeePersistenceService
+from Data_Objects.Employee import Employee
+from Persistence.EmployeePersistenceService import EmployeePersistenceService
 """
 Employee Controller that Employee Interface will call for logic of process
 """

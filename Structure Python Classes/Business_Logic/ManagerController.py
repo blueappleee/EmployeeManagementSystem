@@ -1,5 +1,5 @@
-from Manager import Manager
-from ManagerPersistenceService import ManagerPersistenceService
+from Data_Objects.Manager import Manager
+from Persistence.ManagerPersistenceService import ManagerPersistenceService
 
 """
 Manager Controller that Manager Interface will call for logic of process
@@ -7,6 +7,13 @@ Manager Controller that Manager Interface will call for logic of process
 class ManagerController:
     def __init__(self):
         pass
+
+    """
+    Get Manager by Id
+    """
+    @staticmethod
+    def getManagerById(managerId) -> Manager:
+        return ManagerPersistenceService.searchManagerById(managerId)
 
     """
     Logic to correct a team employee's work hours

@@ -1,4 +1,4 @@
-from Employee import Employee
+from Data_Objects.Employee import Employee
 """
 Employee Persistence Service receives calls from Employee Controller and interacts with the database
 """

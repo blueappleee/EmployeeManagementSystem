@@ -1,9 +1,16 @@
-
+from Data_Objects.Manager import Manager
 """
 Manager Persistence Service receives calls from Manager Controller and interacts with the database
 """
 class ManagerPersistenceService:
     def __init__(self):
+        pass
+
+    """
+    Search for employee by id return
+    """
+    @staticmethod
+    def searchManagerById(managerId) -> Manager:
         pass
 
     """
@@ -52,5 +59,5 @@ class ManagerPersistenceService:
     Get project details
     """
     @staticmethod
-    def getProjectDetails():
+    def getProjectDetails(projectId):
         pass
