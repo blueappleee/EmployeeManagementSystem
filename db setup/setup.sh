@@ -26,6 +26,7 @@ sudo systemctl restart mysql.service
 sudo mysql_secure_installation -p${MYSQLPASS} -D
 sed -i "/CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY 'tmppass'/c\CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY '${EMPMANAGEMENTPASS}'" test.sql
 sudo mysql -nvvf --verbose -p${MYSQLPASS} < setupScript.sql > setupOutput.txt 2>&1
+sudo mysql -nvvf --verbose -p${MYSQLPASS} < dummyValues.sql > dummyOutput.txt 2>&1
 
 # this sed line will need to repalce var = and something.py so it enters the set password into the python code
 #sed -i "/var = mysql.connector.connect(host='localhost',user='test',password='password')/c\var = mysql.connector.connect(host='localhost',user='test',password='${EMPMANAGEMENTPASS')" something.py
