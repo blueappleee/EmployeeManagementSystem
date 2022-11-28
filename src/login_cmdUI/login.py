@@ -1,9 +1,6 @@
 import  sys, pyfiglet, signal
 from Business_Logic import EmployeeController as ec
 from UI_factory import UI_generator
-import sys
-
-sys.path.insert('Structure Python Classes/Business_Logic')
 
 
 def Destruct(signum,frame):
