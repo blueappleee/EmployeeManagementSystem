@@ -1,6 +1,6 @@
 #! /bin/sh
-export MYSQLPASS="cs4471test"
-export EMPMANAGEMENTPASS="notpassword"
+export MYSQLPASS="cs4471pass"
+export EMPMANAGEMENTPASS="cs4471pass"
 sudo apt-get -q -y upgrade
 sudo apt -q -y install wget
 sudo apt -q -y install nano
@@ -24,7 +24,7 @@ sudo systemctl revert mysql
 sudo killall -u mysql
 sudo systemctl restart mysql.service
 sudo mysql_secure_installation -p${MYSQLPASS} -D
-sed -i "/CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY 'tmppass'/c\CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY '${EMPMANAGEMENTPASS}'" test.sql
+sed -i "/CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY 'tmppass'/c\CREATE USER if not exists 'empManagement'@'localhost' IDENTIFIED BY '${EMPMANAGEMENTPASS}'" setupScript.sql
 sudo mysql -nvvf --verbose -p${MYSQLPASS} < setupScript.sql > setupOutput.txt 2>&1
 sudo mysql -nvvf --verbose -p${MYSQLPASS} < dummyValues.sql > dummyOutput.txt 2>&1
 
