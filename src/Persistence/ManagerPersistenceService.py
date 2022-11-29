@@ -1,20 +1,14 @@
-from Data_Objects.Manager import Manager
 from src import dbConnection
 import sys
 import mysql.connector
 from mysql.connector import Error
+
+
 """
 Manager Persistence Service receives calls from Manager Controller and interacts with the database
 """
 class ManagerPersistenceService:
     def __init__(self):
-        pass
-
-    """
-    Search for employee by id return
-    """
-    @staticmethod
-    def searchManagerById(managerId) -> Manager:
         pass
 
     """
@@ -25,7 +19,9 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            cur.execute("UPDATE hoursWorked SET hourAmount = " + workHours + "WHERE employeeID = " + teamEmployeeId)
+            cur.execute("UPDATE hoursWorked SET hourAmount = '%(1)s' WHERE employeeID = '%(2)s';" % {"1" : workHours, "2" : teamEmployeeId})
+
+        # FIXME store the query results into data objects
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
@@ -51,7 +47,7 @@ class ManagerPersistenceService:
     Get Specific Team Employee's work related data
     """
     @staticmethod
-    def getTeamEmployeeWorkData(teamEmployeeId):
+    def getTeamEmployeeWorkData(teamID, teamEmployeeID):
         cur = dbConnection.connection.cursor()
 
         try:
@@ -98,7 +94,7 @@ class ManagerPersistenceService:
     Get project details
     """
     @staticmethod
-    def getProjectDetails(projectId):
+    def getProjectDetails(projectID):
         cur = dbConnection.connection.cursor()
 
         try:
