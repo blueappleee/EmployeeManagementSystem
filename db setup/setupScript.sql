@@ -1,6 +1,6 @@
 SET GLOBAL validate_password.policy = 0;
 
-CREATE USER IF NOT EXISTS 'empManagement'@'localhost' IDENTIFIED BY 'testpassss';
+CREATE USER IF NOT EXISTS 'empManagement'@'localhost' IDENTIFIED BY 'cs4471pass';
 
 CREATE DATABASE IF NOT EXISTS empManagementdb;
 
