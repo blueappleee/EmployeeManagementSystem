@@ -23,7 +23,7 @@ class EmployeePersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='SELECT * FROM employee WHERE employeeID=' + addQuotes(employeeId) + ''
+            query='SELECT * FROM employee WHERE employeeID=' + self.addQuotes(employeeId) + ''
             cur.execute(query)
             result=cur.fetchall()
             employee = Employee(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9],
@@ -45,26 +45,26 @@ class EmployeePersistenceService:
         empU = ""
         teamMemI=""
         try:
-            query='UPDATE employee SET password=' + addQuotes(employee.password)
-            + ', empType=' + addQuotes(employee.empType)
-            + ', teamID=' + addQuotes(employee.teamId)
-            + ', managerID=' + addQuotes(employee.managerId)
-            + ', fname=' + addQuotes(employee.fname)
-            + ', lname=' + addQuotes(employee.lname)
-            + ', salary=' + addQuotes(employee.salary)
-            + ', position=' + addQuotes(employee.position)
-            + ', startDate=' + addQuotes(employee.startDate)
-            + ', birthDate=' + addQuotes(employee.birthDate)
-            + ', sickDaysYearly=' + addQuotes(employee.sickDaysYearly)
-            + ', sickDaysRemaining=' + addQuotes(employee.sickDaysRemaining)
-            + ', vacationDaysYearly=' + addQuotes(employee.vacationDaysYearly)
-            + ', vacationDaysRemaining=' + addQuotes(employee.vacationDaysRemaining)
-            + ', address=' + addQuotes(employee.address)
-            + ', phonenumber=' + addQuotes(employee.phonenumber)
-            + ', workEmail=' + addQuotes(employee.workEmail)
-            + ', personalEmail=' + addQuotes(employee.personalEmail)
-            + ', directDepositNumber=' + addQuotes(employee.directDepositNumber)
-            + ', ssn=' + addQuotes(employee.ssn) + ' WHERE employeeID=' + addQuotes(employee.employeeId) + ''
+            query='UPDATE employee SET password=' + self.addQuotes(employee.password)
+            + ', empType=' + self.addQuotes(employee.empType)
+            + ', teamID=' + self.addQuotes(employee.teamId)
+            + ', managerID=' + self.addQuotes(employee.managerId)
+            + ', fname=' + self.addQuotes(employee.fname)
+            + ', lname=' + self.addQuotes(employee.lname)
+            + ', salary=' + self.addQuotes(employee.salary)
+            + ', position=' + self.addQuotes(employee.position)
+            + ', startDate=' + self.addQuotes(employee.startDate)
+            + ', birthDate=' + self.addQuotes(employee.birthDate)
+            + ', sickDaysYearly=' + self.addQuotes(employee.sickDaysYearly)
+            + ', sickDaysRemaining=' + self.addQuotes(employee.sickDaysRemaining)
+            + ', vacationDaysYearly=' + self.addQuotes(employee.vacationDaysYearly)
+            + ', vacationDaysRemaining=' + self.addQuotes(employee.vacationDaysRemaining)
+            + ', address=' + self.addQuotes(employee.address)
+            + ', phonenumber=' + self.addQuotes(employee.phonenumber)
+            + ', workEmail=' + self.addQuotes(employee.workEmail)
+            + ', personalEmail=' + self.addQuotes(employee.personalEmail)
+            + ', directDepositNumber=' + self.addQuotes(employee.directDepositNumber)
+            + ', ssn=' + self.addQuotes(employee.ssn) + ' WHERE employeeID=' + self.addQuotes(employee.employeeId) + ''
             cur.execute(query)
             dbConnection.connection.commit()
             empU=cur.rowcount
@@ -74,7 +74,7 @@ class EmployeePersistenceService:
           
         if employee.teamId != null:
             try:
-                query='SELECT * FROM teamMembers WHERE employeeID=' + addQuotes(employee.employeeId) + ''
+                query='SELECT * FROM teamMembers WHERE employeeID=' + self.addQuotes(employee.employeeId) + ''
                 cur.execute(query)
                 teamRowExists = False
                 memberResult = cur.fetchall()
@@ -82,7 +82,7 @@ class EmployeePersistenceService:
                 
                 for row in memberResult:
                     if row[0] != teamId:
-                        dropQuery = 'DELETE FROM teamMembers WHERE employeeID=' + addQuotes(employee.employeeId) + ' AND teamID=' + addQuotes(employee.teamId) + ''
+                        dropQuery = 'DELETE FROM teamMembers WHERE employeeID=' + self.addQuotes(employee.employeeId) + ' AND teamID=' + self.addQuotes(employee.teamId) + ''
                         cur.execute(sql)
                         dbConnection.connection.commit()
                     else:
@@ -90,7 +90,7 @@ class EmployeePersistenceService:
                         
                 if teamRowExists==False:
                     try:
-                        query='INSERT INTO teamMembers (teamID, employeeID) VALUES (' + addQuotes(employee.teamId) + ', ' + addQuotes(employee.employeeId) +  ')'
+                        query='INSERT INTO teamMembers (teamID, employeeID) VALUES (' + self.addQuotes(employee.teamId) + ', ' + self.addQuotes(employee.employeeId) +  ')'
                         cur.execute(query)
                         dbConnection.connection.commit()
                         teamMemI = cur.rowcount
@@ -104,7 +104,7 @@ class EmployeePersistenceService:
             
         if employee.managerId != null:
             try:
-                query='SELECT * FROM empManaged WHERE employeeID=' + addQuotes(employee.employeeId) + ''
+                query='SELECT * FROM empManaged WHERE employeeID=' + self.addQuotes(employee.employeeId) + ''
                 cur.execute(query)
                 teamRowExists = False
                 managedResult = cur.fetchall()
@@ -112,7 +112,7 @@ class EmployeePersistenceService:
                 
                 for row in managedResult:
                     if row[0] != employee.managerId:
-                        dropQuery = 'Delete FROM empManaged WHERE employeeID=' + addQuotes(employee.employeeId) + ' AND managerID=' + addQuotes(employee.managerId) + ''
+                        dropQuery = 'Delete FROM empManaged WHERE employeeID=' + self.addQuotes(employee.employeeId) + ' AND managerID=' + self.addQuotes(employee.managerId) + ''
                         cur.execute(sql)
                         dbConnection.connection.commit()
                     else:
@@ -120,7 +120,7 @@ class EmployeePersistenceService:
                         
                 if teamRowExists==False:
                     try:
-                        query='INSERT INTO empManaged (managerID, employeeID) VALUES (' + addQuotes(employee.managerId) + ' , ' addQuotes(employee.employeeId) + ')'
+                        query='INSERT INTO empManaged (managerID, employeeID) VALUES (' + self.addQuotes(employee.managerId) + ' , ' self.addQuotes(employee.employeeId) + ')'
                         cur.execute(query)
                         dbConnection.connection.commit()
                         managedI=cur.rowcount
@@ -143,7 +143,7 @@ class EmployeePersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='INSERT INTO hoursWorked ("employeeID", "hourType", "hourAmount", "workDate") VALUES (' + addQuotes(employee.employeeId) + ', ' + addQuotes(workType) + ', ' + addQuotes(workTime) + ', ' + addQuotes(workDate) + ')'
+            query='INSERT INTO hoursWorked ("employeeID", "hourType", "hourAmount", "workDate") VALUES (' + self.addQuotes(employee.employeeId) + ', ' + self.addQuotes(workType) + ', ' + self.addQuotes(workTime) + ', ' + self.addQuotes(workDate) + ')'
             cur.execute(query)
             mydb.commit()
             hoursWorkedR = cur.rowcount
@@ -154,7 +154,7 @@ class EmployeePersistenceService:
             
         if employee.teamId != null:
             try:
-                query='SELECT projectID FROM team WHERE teamID=' + addQuotes(employee.teamId) + ''
+                query='SELECT projectID FROM team WHERE teamID=' + self.addQuotes(employee.teamId) + ''
                 cur.execute(query)
                 projectIDR=cur.fetchall()
                 projectID=projectIDR[0]
@@ -164,7 +164,7 @@ class EmployeePersistenceService:
                 sys.exit(1)
         
             try:
-                query='SELECT * FROM teamHoursWorked WHERE teamID=' + addQuotes(employee.teamId) + ' AND projectID=' + addQuotes(projectID) + ''
+                query='SELECT * FROM teamHoursWorked WHERE teamID=' + self.addQuotes(employee.teamId) + ' AND projectID=' + self.addQuotes(projectID) + ''
                 cur.execute(query)
                 teamRowExists = False
                 teamHoursResult = cur.fetchall()
@@ -172,7 +172,7 @@ class EmployeePersistenceService:
                 
                 if teamHoursResult = []:
                     try:
-                        query='INSERT INTO teamHoursWorked (teamID, projectID, hourAmount) VALUES (' + addQuotes(employee.teamId) + ', ' + addQuotes(projectID) + ', ' + addQuotes(workTime) + ')'
+                        query='INSERT INTO teamHoursWorked (teamID, projectID, hourAmount) VALUES (' + self.addQuotes(employee.teamId) + ', ' + self.addQuotes(projectID) + ', ' + self.addQuotes(workTime) + ')'
                         cur.execute(query)
                         dbConnection.connection.commit()
                         teamHourI = cur.rowcount
@@ -182,7 +182,7 @@ class EmployeePersistenceService:
                 else:
                     newHours = int(teamHoursResult[2]) + int(hourAmount)
                     try:
-                        query='UPDATE teamHoursWorked set hourAmount=' + addQuotes(newHours) + ' WHERE teamID=' + addQuotes(employee.teamId) + ' AND projectID=' + addQuotes(projectID) +  ''
+                        query='UPDATE teamHoursWorked set hourAmount=' + self.addQuotes(newHours) + ' WHERE teamID=' + self.addQuotes(employee.teamId) + ' AND projectID=' + self.addQuotes(projectID) +  ''
                         cur.execute(query)
                         dbConnection.connection.commit()
                         teamHourI = cur.rowcount

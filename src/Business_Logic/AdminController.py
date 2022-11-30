@@ -17,13 +17,26 @@ class AdminController(EmployeeController):
 
     def __init__(self):
         super.__init__()
+        
+    fixed_tp_length = {"projectID":8}
+    max_tp_length = {"projectName":20, "projectStatus":20, "teamName":20}
 
+    def isfixedTP(input,type):
+        fixLength = self.fixed_tp_length[type]
+        if fixLength == len(input): return True
+        return f'Error: wrong attribute({type}) format. Must be exactly{fixLength}.'
+        
+    def isMaxTP(input,type):
+        maxLength = self.max_tp_length[type]
+        if maxLength >= len(input): return True
+        return f'Error: wrong attribute({type}) format. Must be up to {maxLength}.'
+        
     """
     Search for admin by id to return
     """
     @staticmethod
     def searchAdminById(adminId) -> SysAdmin:
-        validID = isfixed(adminId, "employeeID")
+        validID = super().isfixed(adminId, "employeeID")
         if validID == True:
             self.dataobject=AdminPersistenceService.searchAdminById(adminId)
             return self.dataobject
@@ -35,8 +48,8 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def setEmployeeRole(employeeId, role):
-        validID = isfixed(employeeId, "employeeID")
-        validRole = isfixed(role,"position")
+        validID = super().isfixed(employeeId, "employeeID")
+        validRole = super().isfixed(role,"position")
         if validID == True and validRole == True:
             setRole=AdminPersistenceService.setEmployeeRole(employeeId, role)
             if setRole == 0:
@@ -64,7 +77,7 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def setEmployeeInactive(employeeId):
-        validID=isfixed(employeeId, "employeeID")
+        validID=super().isfixed(employeeId, "employeeID")
         if validID == True:
             setInactive = AdminPersistenceService.setEmployeeInactive(employeeId)
             if setTeam.contains("mysql.connector.errors"): 
@@ -76,15 +89,14 @@ class AdminController(EmployeeController):
                 return f'Success employee has been set Inactive!'
         else:
             return validID
-        pass
-
+        
     """
     Assign a manager to a team
     """
     @staticmethod
     def assignManagerToTeam(managerId, teamId):
-        validID = isfixed(managerId, "employeeID")
-        validTeam = isfixed(teamId,"teamID")
+        validID = super().isfixed(managerId, "employeeID")
+        validTeam = super().isfixed(teamId,"teamID")
         if validID == True and validTeam == True:
             setTeam=AdminPersistenceService.assignManagerToTeam(managerId, teamId)
             if setTeam.contains("mysql.connector.errors"): 
@@ -106,25 +118,38 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def createTeam(team: Team):
-        if isfixed(team.teamId) != True:
+        # create isFixed team and is MAx team
+        if super().isfixed(team.teamId, "teamID") != True:
             return f'Invalid teamID. Input must be 4 characters'
+            
         if team.managerId is not None:
-            if isfixed(team.managerId)  != True:
-                return f'Invalid ManagerID. Input must be 8 characters'
-              
-        validTeam = isfixed(teamId,"teamID")
-        if validID == True and validTeam == True:
-            makeTeam=AdminPersistenceService.createTeam(team)
-            if makeTeam.contains("mysql.connector.errors"): 
-                return f'An error occurred assigning the manager to team due to an invalid value'
-            else
-                return f'Success team has been created!'
-        else if validID != True and validTeam != True:
-            return (validID,validTeam)
-        else if validID != True:
-            return validID
+            if super().isfixed(team.managerId, "employeeID") != True:
+                return f'Invalid ManagerID. Input must be 6 characters'
         else:
-            return validTeam
+            team.managerId = "NULL"
+            
+        if team.projectId is not None:
+            if super().isfixedTP(team.projectId, "projectID") != True:
+                return f'Invalid projectID. Input must be 8 characters'
+        else:
+            team.projectId = "NULL"
+            
+        if team.name is not None:
+            if self.isMaxTP(team.name, "teamName") != True:
+                return f'Invalid team name. Input must be max 20 characters'
+        else:
+            team.name = "NULL"
+            
+        for member in team.teamMembers:
+            if super().isfixed(member, "employeeID") != True:
+                retStr = "Invalid employeeID for team member: " + member + " , employeeID must be 8 characters"
+                return retStr
+        
+        makeTeam=AdminPersistenceService.createTeam(team)
+        if makeTeam.contains("mysql.connector.errors"): 
+            return f'An error occurred creating the team'
+        else
+            return f'Success team has been created!'
 
     """
     Create project with data stored in Project object
@@ -132,4 +157,29 @@ class AdminController(EmployeeController):
     @staticmethod
     def createProject(project: Project):
         AdminPersistenceService.createProject(project)
-        pass
+        if self.isfixedTP(project.projectId, "projectID") != True:
+            return f'Invalid projectID. Input must be 8 characters'
+            
+        if project.name is not None:
+            if self.isMaxTP(project.name, "projectName") != True:
+                return f'Invalid project name. Input must be max 20 characters'
+        else:
+            project.name = "NULL"
+            
+        if project.currentTeamId is not None:
+            if super().isfixed(project.currentTeamId, "teamID") != True:
+                return f'Invalid team name. Input must be 4 characters'
+        else:
+            team.name = "NULL"
+            
+        if project.status is not None:
+            if self.isMaxTP(project.status, "projectStatus") != True:
+                return f'Invalid team name. Input must be max 20 characters'
+        else:
+            team.name = "NULL"
+        
+        makeProject=AdminPersistenceService.createProject(project)
+        if makeProject.contains("mysql.connector.errors"): 
+            return f'An error occurred creating the project'
+        else
+            return f'Success project has been created!'
