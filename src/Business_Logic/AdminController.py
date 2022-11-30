@@ -67,7 +67,9 @@ class AdminController(EmployeeController):
         validID=isfixed(employeeId, "employeeID")
         if validID == True:
             setInactive = AdminPersistenceService.setEmployeeInactive(employeeId)
-            if setInactive[2] == 0:
+            if setTeam.contains("mysql.connector.errors"): 
+                return f'An error occurred setting the employee inactive due to an invalid value'
+            else if setInactive[2] == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
             else:
@@ -85,7 +87,9 @@ class AdminController(EmployeeController):
         validTeam = isfixed(teamId,"teamID")
         if validID == True and validTeam == True:
             setTeam=AdminPersistenceService.assignManagerToTeam(managerId, teamId)
-            if setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0:
+            if setTeam.contains("mysql.connector.errors"): 
+                return f'An error occurred assigning the manager to team due to an invalid value'
+            else if setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
             else
@@ -102,8 +106,25 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def createTeam(team: Team):
-        AdminPersistenceService.createTeam(team)
-        pass
+        if isfixed(team.teamId) != True:
+            return f'Invalid teamID. Input must be 4 characters'
+        if team.managerId is not None:
+            if isfixed(team.managerId)  != True:
+                return f'Invalid ManagerID. Input must be 8 characters'
+              
+        validTeam = isfixed(teamId,"teamID")
+        if validID == True and validTeam == True:
+            makeTeam=AdminPersistenceService.createTeam(team)
+            if makeTeam.contains("mysql.connector.errors"): 
+                return f'An error occurred assigning the manager to team due to an invalid value'
+            else
+                return f'Success team has been created!'
+        else if validID != True and validTeam != True:
+            return (validID,validTeam)
+        else if validID != True:
+            return validID
+        else:
+            return validTeam
 
     """
     Create project with data stored in Project object
