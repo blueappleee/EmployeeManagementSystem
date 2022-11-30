@@ -9,6 +9,15 @@ Admin Persistence Service receives calls from Admin Controller and interacts wit
 class AdminPersistenceService:
     def __init__(self):
         pass
+        
+    def addQuotes(attribute):
+        if attribute != NULL:
+            retstr = '"' + attribute + '"'
+            
+        else:
+            retstr = 'NULL'
+            
+        return retstr
 
     """
     Search for admin by id to return
@@ -18,7 +27,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='SELECT * FROM employee WHERE employeeID="' employeeId + '"'
+            query='SELECT * FROM employee WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             result=cur.fetchall()
             sysAdmin = SysAdmin(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9],
@@ -37,7 +46,7 @@ class AdminPersistenceService:
     @staticmethod
     def setEmployeeRole(employeeId, role):
         try:
-            query='UPDATE employee SET position="' + role + '" WHERE employeeID="' + employeeId + '"'
+            query='UPDATE employee SET position=' + addQuotes(role) + ' WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             posResult = cur.rowcount
             
@@ -58,11 +67,11 @@ class AdminPersistenceService:
         #update usecase, this doesnt need to include setEmployeeRoel??
         try:
             query='INSERT INTO employee (employeeID, password, empType, teamID, managerID, fname, lname, salary, position, startDate, birthDate, sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, address, phonenumber, workEmail, personalEmail, directDepositNumber, ssn) VALUES ("'
-                   + employee.employeeId + '", "' + employee.password + '", "' + employee.empType + '", "' + employee.teamId + '", "' + employee.managerId + '", "'
-                   + employee.fname + '", "' employee.lname + '", "' + employee.salary + '", "' + employee.position + '", "' + employee.startDate.strftime('%Y-%m-%d') + '", "'
-                   + employee.birthDate.strftime('%Y-%m-%d') + '", "' + employee.sickDaysYearly + '", "' + employee.sickDaysRemaining + '", "' + employee.vacationDaysYearly + '", "'
-                   + employee.vacationDaysRemaining + '", "' + employee.address + '", "' + employee.phonenumber + '", "' + employee.phonenumber + '", "' + employee.workEmail + '", "'
-                   + employee.personalEmail + '", "' + employee.directDepositNumber + '", "' + employee.ssn + '")'
+                   + addQuotes(employee.employeeId) + ', ' + addQuotes(employee.password) + ', ' + addQuotes(employee.empType) + ', ' + addQuotes(employee.teamId) + ', ' + addQuotes(employee.managerId) + ', '
+                   + addQuotes(employee.fname) + ', ' + addQuotes(employee.lname) + ', ' + addQuotes(employee.salary) + ', ' + addQuotes(employee.position) + ', ' + addQuotes(employee.startDate.strftime('%Y-%m-%d')) + ', '
+                   + addQuotes(employee.birthDate.strftime('%Y-%m-%d')) + ', ' + addQuotes(employee.sickDaysYearly) + ', ' + addQuotes(employee.sickDaysRemaining) + ', ' + addQuotes(employee.vacationDaysYearly) + ', '
+                   + addQuotes(employee.vacationDaysRemaining) + ', ' + addQuotes(employee.address) + ', ' + addQuotes(employee.phonenumber) + ', ' + addQuotes(employee.phonenumber) + ', ' + addQuotes(employee.workEmail) + ', '
+                   + addQuotes(employee.personalEmail) + ', ' + addQuotes(employee.directDepositNumber) + ', ' + addQuotes(employee.ssn) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
             empI=cur.rowcount
@@ -73,7 +82,7 @@ class AdminPersistenceService:
             
         if employee.teamId != null:
             try:
-                query='INSERT INTO teamMembers (teamID, employeeID) VALUES ("' + employee.teamId + '" , "' employee.employeeId + '")'
+                query='INSERT INTO teamMembers (teamID, employeeID) VALUES (' + addQuotes(employee.teamId) + ' , ' + addQuotes(employee.employeeId) + ')'
                 cur.execute(query)
                 dbConnection.connection.commit()
                 teamI=cur.rowcount
@@ -84,7 +93,7 @@ class AdminPersistenceService:
             
         if employee.managerId != null:
             try:
-                query='INSERT INTO empManaged (managerID, employeeID) VALUES ("' + employee.managerId + '" , "' employee.employeeId + '")'
+                query='INSERT INTO empManaged (managerID, employeeID) VALUES (' + addQuotes(employee.managerId) + ' , ' + addQuotes(employee.employeeId) + ')'
                 cur.execute(query)
                 dbConnection.connection.commit()
                 manI=cur.rowcount
@@ -102,7 +111,7 @@ class AdminPersistenceService:
     @staticmethod 
     def setEmployeeInactive(employeeId):
         try:
-            query='DELETE FROM empManaged WHERE employeeID="' + employeeId + '"'
+            query='DELETE FROM empManaged WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             teamManRowExists = False
             managedResult = cur.rowcount
@@ -112,7 +121,7 @@ class AdminPersistenceService:
             sys.exit(1)
             
         try:
-            query='DELETE FROM teamMembers WHERE employeeID="' + employeeId + '"'
+            query='DELETE FROM teamMembers WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             memberResult = cur.rowcount
             
@@ -121,7 +130,7 @@ class AdminPersistenceService:
             sys.exit(1)
     
         try:
-            query='UPDATE employee SET position="Inactive" WHERE employeeID="' + employeeId + '"'
+            query='UPDATE employee SET position="Inactive" WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             posResult = cur.rowcount
             
@@ -140,7 +149,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='UPDATE team SET teamManagerID="' + teamId + '" WHERE employeeID="' + manager.employeeId + '"'
+            query='UPDATE team SET teamManagerID=' + addQuotes(teamId) + ' WHERE employeeID=' + addQuotes(manager.employeeId) + ''
             cur.execute(query)
             dbConnection.connection.commit()
             teamI= cur.rowcount
@@ -150,7 +159,7 @@ class AdminPersistenceService:
             
             
         try:
-            query='UPDATE employee SET teamID="' + teamId + '" WHERE employeeID="' + manager.employeeId + '"'
+            query='UPDATE employee SET teamID=' + addQuotes(teamId) + ' WHERE employeeID=' + addQuotes(manager.employeeId) + ''
             cur.execute(query)
             dbConnection.connection.commit()
             empI= cur.rowcount
@@ -159,7 +168,7 @@ class AdminPersistenceService:
             return error
               
         try:
-            query='SELECT * FROM teamMembers WHERE employeeID="' manager.employeeId + '"'
+            query='SELECT * FROM teamMembers WHERE employeeID=' + addQuotes(manager.employeeId) + ''
             cur.execute(query)
             teamRowExists = False
             memberResult = cur.fetchall()
@@ -167,7 +176,7 @@ class AdminPersistenceService:
             
             for row in memberResult:
                 if row[0] != teamId:
-                    dropQuery = 'DELETE FROM teamMembers WHERE employeeID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
+                    dropQuery = 'DELETE FROM teamMembers WHERE employeeID=' + addQuotes(manager.employeeId) + ' AND teamID=' + addQuotes(teamId) + ''
                     cur.execute(sql)
                     dbConnection.connection.commit()
                 else:
@@ -175,7 +184,7 @@ class AdminPersistenceService:
                     
             if teamRowExists==False:
                 try:
-                    query='INSERT INTO teamMembers (teamID, employeeID) VALUES ("' + teamId + '", "' + manager.employeeId +  '")'
+                    query='INSERT INTO teamMembers (teamID, employeeID) VALUES (' + addQuotes(teamId) + ', ' + addQuotes(manager.employeeId) +  ')'
                     cur.execute(query)
                     dbConnection.connection.commit()
                     teamMemI = cur.rowcount
@@ -188,7 +197,7 @@ class AdminPersistenceService:
             sys.exit(1)
         
         try:
-            query='SELECT * FROM teamManaged WHERE managerID="' manager.employeeId + '"'
+            query='SELECT * FROM teamManaged WHERE managerID=' + addQuotes(manager.employeeId) + ''
             cur.execute(query)
             teamManRowExists = False
             managedResult = cur.fetchall()
@@ -196,7 +205,7 @@ class AdminPersistenceService:
             
             for row in managedResult:
                 if row[1] != teamId:
-                    dropQuery = 'DELETE FROM teamManaged WHERE managerID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
+                    dropQuery = 'DELETE FROM teamManaged WHERE managerID=' + addQuotes(manager.employeeId) + ' AND teamID=' + addQuotes(teamId) + ''
                     cur.execute(sql)
                     dbConnection.connection.commit()
                 else:
@@ -204,7 +213,7 @@ class AdminPersistenceService:
                     
             if teamManRowExists==False:
                 try:
-                    query='INSERT INTO teamManaged (managerID, teamID) VALUES ("' + manager.employeeId + '", "' + teamId +  '")'
+                    query='INSERT INTO teamManaged (managerID, teamID) VALUES (' + addQuotes(manager.employeeId) + ', ' + addQuotes(teamId) +  ')'
                     cur.execute(query)
                     dbConnection.connection.commit()
                     teamManI = cur.rowcount
@@ -227,8 +236,8 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ("'
-                   + team.teamId + '", "' + team.teamManagerID + '", "' + team.teamName + '", "' + team.projectId + '")'
+            query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ('
+                   + addQuotes(team.teamId) + ', ' + addQuotes(team.teamManagerId) + ', ' + addQuotes(team.teamName) + ', ' + addQuotes(team.projectId) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
             teamI = cur.rowcount
@@ -240,8 +249,8 @@ class AdminPersistenceService:
         membersI = []
         for member in team.teamMembers:
             try:
-                query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ("'
-                       + team.teamId + '", "' + team.teamManagerID + '", "' + team.teamName + '", "' + team.projectId + '")'
+                query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ('
+                       + addQuotes(team.teamId) + ', ' + addQuotes(team.teamManagerID) + ', ' + addQuotes(team.teamName) + ', ' + addQuotes(team.projectId) + ')'
                 cur.execute(query)
                 dbConnection.connection.commit()
                 membersI.append(cur.rowcount)
@@ -261,11 +270,11 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='INSERT INTO project (projectID, projectName, currentTeamID, projectStatus) VALUES ("'
-                   + project.projectId + '", "' + project.projectName + '", "' + project.currentTeamId + '", "' + project.projectStatus + '")'
+            query='INSERT INTO project (projectID, projectName, currentTeamID, projectStatus) VALUES ('
+                   + addQuotes(project.projectId) + ', ' + addQuotes(project.projectName) + ', ' + addQuotes(project.currentTeamId) + ', ' + addQuotes(project.projectStatus) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
-            return cur.rowcount
+            projrows= cur.rowcount
         except mysql.connector.Error as error:
             # potential errors: team does not exist
             print(error)
@@ -274,3 +283,4 @@ class AdminPersistenceService:
         # TODO team if teamID is set
             
         dbConnection.connection.close()
+        return projrows

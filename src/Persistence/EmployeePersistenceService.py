@@ -23,7 +23,7 @@ class EmployeePersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='SELECT * FROM employee WHERE employeeID=' addQuotes(employeeId) + ''
+            query='SELECT * FROM employee WHERE employeeID=' + addQuotes(employeeId) + ''
             cur.execute(query)
             result=cur.fetchall()
             employee = Employee(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9],
@@ -74,7 +74,7 @@ class EmployeePersistenceService:
           
         if employee.teamId != null:
             try:
-                query='SELECT * FROM teamMembers WHERE employeeID=' addQuotes(employee.employeeId) + ''
+                query='SELECT * FROM teamMembers WHERE employeeID=' + addQuotes(employee.employeeId) + ''
                 cur.execute(query)
                 teamRowExists = False
                 memberResult = cur.fetchall()
@@ -104,7 +104,7 @@ class EmployeePersistenceService:
             
         if employee.managerId != null:
             try:
-                query='SELECT * FROM empManaged WHERE employeeID=' addQuotes(employee.employeeId) + ''
+                query='SELECT * FROM empManaged WHERE employeeID=' + addQuotes(employee.employeeId) + ''
                 cur.execute(query)
                 teamRowExists = False
                 managedResult = cur.fetchall()
