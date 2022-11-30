@@ -1,4 +1,4 @@
-import sys
+import sys,pyfiglet
 from abc import ABC, abstractmethod
 from Business_Logic import EmployeeController as ec
 
@@ -22,52 +22,51 @@ class general_UI(ABC):#abstract calss of differet UIs
     def get_query(self,sql):
         pass
 
-class employee_UI(general_UI):
+class employeeUI(general_UI):
     def __init__(self,uid):
         self.query = {}
         self.uid = uid
-        self.command_dict = {'search': self.search, 'update': self.update_info, 'report' : self.report_hours, }
+        self.command_dict = {'update': self.update_info, 'report' : self.report_hours,'exit' : self.terminate }
         self.dataobject = None
+        print(
+"""You are loging in with regular employee priviliges, you can enter:
+update  *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info with specific attributes
+report  *worktype = [something not sure]    To log your working hours with specific work type
+When type your command, Words start with * must be replaced by one of the keywords in []
+Type exit to logout""")
     def assignDataObject(self,data):
         self.dataobject = data
     def terminate(self,type):
+        ascii_banner = pyfiglet.figlet_format("Bye!")
         print("System terminates...")
+        print(ascii_banner)
         sys.exit(0)
-    def search(self,type):
-        keys = {'uid':' ' ,'username':' '}
-        if type == 'uid':
-            searchtype = 'uid'
-            searchkey = input('enter the userID:')
-        elif type == 'username':
-            searchtype = 'username'
-            searchkey = input('enter the username: ')
-        else:
-            print("invlid type, please enter again.")
-            return
-        keys[searchtype] = searchkey
-        #using this to connect to deeper layer
-        #Left to implement...
-        #connect to actor class use the *search* variable to search
     def update_info(self,attribute):
+        while(True):
+            try:
+                getattr(self.dataobject,attribute)
+                break
+            except Exception:
+                attribute = input('Enter an valid attribute in [fName/lName/birthDate/phoneNumber/personalEmail]: ')
         changed_attribute = input("changed value: ")
-        self.dataobject.attribute =  attribute #this line need fuether detailc for dataobject INFO
-        ec.EmployeeController.updateEmployeeInformation(self.dataobject)
-        return
+        setattr(self.dataobject, attribute, changed_attribute)
+        #this line need fuether detailc for dataobject INFO
+        msg = ec.EmployeeController.updateEmployeeInformation(attribute,self.dataobject)
+        print(msg)
     def report_hours(self,worktype):
         workTime = input("Enter work hours: ")
         workTime = input_shoe_be_num(workTime)
         ec.EmployeeController.logWorkHours(self.dataobject,worktype,workTime)
         #left to implement
-        return
-    def get_query(self,sql):
-        return
     def cmd_UI(self):
         while True:#ask for user input and map to the functions
             command = input("command: ").split()
-            if(len(command) != 2):
-                print('Invalid format, should be ***search [key_type = uid/usrname]***, and other stuffs dont know yet\n')
-                continue
+            if len(command) == 0: continue
             if command[0] in self.command_dict:#map input commnad to command functions
-                self.command_dict[command[0]](command[1])
+                if len(command)>1:
+                    param = command[1]
+                else:
+                    param = ' '
+                self.command_dict[command[0]](param)
             else:
                 print('invalid command, you can choose ....... need to decide\n')
