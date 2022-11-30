@@ -1,6 +1,7 @@
 from src import dbConnection
-from src.Data_Objects import Project
-from src.Data_Objects import Employee
+from src.Data_Objects.Project import Project
+from src.Data_Objects.Employee import Employee
+from src.Data_Objects.Manager import Manager
 import sys
 import mysql.connector
 from mysql.connector import Error
@@ -39,22 +40,19 @@ class ManagerPersistenceService:
 
         try:
             # list all the employee information in this given team
-            cur.execute("SELECT employeeId, empType, teamId, managerId, fName, lName, salary, position, phoneNumber, workEmail FROM employee, teamMembers WHERE employee.teamID = teamMembers.teamID AND employee.teamID = '%(1)s';" % {"1": teamID})
+            cur.execute("SELECT * FROM teamMembers WHERE teamID = '%(1)s';" % {"1": teamID})
 
             records = cur.fetchall()
             employeeList = []
             for row in records:
-                employeeInstance = Employee()
-                employeeInstance.employeeId = row[0]
-                employeeInstance.empType = row[1]
-                employeeInstance.teamId = row[2]
-                employeeInstance.managerId = row[3]
-                employeeInstance.fName = row[4]
-                employeeInstance.lName = row[5]
-                employeeInstance.salary = row[6]
-                employeeInstance.position = row[7]
-                employeeInstance.phoneNumber = row[8]
-                employeeInstance.workEmail = row[9]
+                employeeID = row[1]
+                cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s';" % {"1": employeeID})
+                employeeInfo = cur.fetchall()
+
+                employeeInstance = Employee(employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5],
+                                            employeeInfo[6], employeeInfo[7], employeeInfo[8], employeeInfo[9], employeeInfo[10], employeeInfo[11],
+                                            employeeInfo[12], employeeInfo[13], employeeInfo[14], employeeInfo[15], employeeInfo[16], employeeInfo[17],
+                                            employeeInfo[18], employeeInfo[19], employeeInfo[20])
 
                 employeeList.append(employeeInstance)
 
@@ -74,16 +72,16 @@ class ManagerPersistenceService:
 
         try:
             # FIXME wait for testing the sql query
-            cur.execute("SELECT projectID, projectName, currentTeamID, projectStatus FROM project, team, employee WHERE team.teamID = project.currentTeamID AND team.teanID = employee.teamID AND employee.employeeID = '%(1)s';" % {"1": teamEmployeeID})
+            cur.execute("SELECT project.projectID, project.projectName, project.currentTeamID, project.projectStatus FROM project, team, employee WHERE team.teamID = project.currentTeamID AND team.teamID = employee.teamID AND employee.employeeID = '%(1)s' AND employee.teamID = '%(2)s';" % {"1": teamEmployeeID, "2": teamID})
 
             records = cur.fetchall()
             projectList = []
             for row in records:
-                projectInstance = Project()
-                projectInstance.projectId = row[0]
-                projectInstance.Name = row[1]
-                projectInstance.currentTeamId = row[2]
-                projectInstance.status = row[3]
+                projectInstance = Project(row[0], row[1], row[2], row[3])
+                # projectInstance.projectId = row[0]
+                # projectInstance.Name = row[1]
+                # projectInstance.currentTeamId = row[2]
+                # projectInstance.status = row[3]
 
                 projectList.append(projectInstance)
 
@@ -162,15 +160,10 @@ class ManagerPersistenceService:
 
         try:
             cur.execute("SELECT * FROM project WHERE projectID = '%(1)s';" % {"1": projectID})
-            datalist = cur.fetchall()
+            record = cur.fetchall()
             print("Total number of rows in table", cur.rowcount)
 
-            projectInstance = Project()
-            for row in datalist:
-                projectInstance.projectId = row[0]
-                projectInstance.Name = row[1]
-                projectInstance.currentTeamId = row[2]
-                projectInstance.status = row[3]
+            projectInstance = Project(record[0], record[1], record[2], record[3])
 
         except mysql.connector.Error as error:
             print(error)
@@ -178,3 +171,27 @@ class ManagerPersistenceService:
         dbConnection.connection.close()
 
         return projectInstance
+
+    """
+        search the manager by id
+        """
+    @staticmethod
+    def searchManagerByID(managerID) -> Manager:
+        cur = dbConnection.connection.cursor()
+
+        try:
+            # cur.execute("SELECT employeeId, empType, teamId, managerId, fName, lName, salary, position, phoneNumber, workEmail FROM employee WHERE employeeID = '%(1)s' AND empType = mng;" % {"1": managerID})
+            cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s' AND empType = mng;" % {"1": managerID})
+            record = cur.fetchall()
+            # print("Total number of rows in table", cur.rowcount)
+
+            managerInstance = Manager(record[0], record[1], record[2], record[3], record[4], record[5], record[6],
+                                      record[7], record[8], record[9], record[10], record[11], record[12], record[13],
+                                      record[14], record[15], record[16], record[17], record[18], record[19], record[20])
+
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+        dbConnection.connection.close()
+
+        return managerInstance
