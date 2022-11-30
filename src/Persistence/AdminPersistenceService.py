@@ -10,7 +10,6 @@ class AdminPersistenceService:
     def __init__(self):
         pass
         
-    # TODO add self. to all .self.addQuotes
     def addQuotes(attribute):
         if attribute is not None and attribute != "NULL":
             retstr = '"' + attribute + '"'
@@ -249,15 +248,19 @@ class AdminPersistenceService:
             
         # fix this to insert into teamMembers table    
         membersI = []
+        
         for member in team.teamMembers:
             try:
-                query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ('
-                       + self.addQuotes(team.teamId) + ', ' + self.addQuotes(team.teamManagerID) + ', ' + self.addQuotes(team.teamName) + ', ' + self.addQuotes(team.projectId) + ')'
+                query='INSERT INTO teamMember (teamID, employeeID) VALUES (' + self.addQuotes(team.teamId) + ', ' + self.addQuotes(member) + ')'
+                cur.execute(query)
+                dbConnection.connection.commit()
+                membersI.append(cur.rowcount)
+                
+                query='UPDATE employee SET teamID=' self.addQuotes(team.teamId) + ' WHERE employeeID=' + self.addQuotes(member) + ''
                 cur.execute(query)
                 dbConnection.connection.commit()
                 membersI.append(cur.rowcount)
             except mysql.connector.Error as error:
-                # potential errors: project needs to exist before adding team with an active project
                 print(error)
                 return error
         
