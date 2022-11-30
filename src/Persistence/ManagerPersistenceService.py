@@ -46,15 +46,15 @@ class ManagerPersistenceService:
             for row in records:
                 employeeInstance = Employee()
                 employeeInstance.employeeId = row[0]
-                employeeInstance.empType = row[2]
-                employeeInstance.teamId = row[3]
-                employeeInstance.managerId = row[4]
-                employeeInstance.fName = row[5]
-                employeeInstance.lName = row[6]
-                employeeInstance.salary = row[7]
-                employeeInstance.position = row[8]
-                employeeInstance.phoneNumber = row[16]
-                employeeInstance.workEmail = row[17]
+                employeeInstance.empType = row[1]
+                employeeInstance.teamId = row[2]
+                employeeInstance.managerId = row[3]
+                employeeInstance.fName = row[4]
+                employeeInstance.lName = row[5]
+                employeeInstance.salary = row[6]
+                employeeInstance.position = row[7]
+                employeeInstance.phoneNumber = row[8]
+                employeeInstance.workEmail = row[9]
 
                 employeeList.append(employeeInstance)
 
