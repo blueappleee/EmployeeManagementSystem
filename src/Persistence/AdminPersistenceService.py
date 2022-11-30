@@ -11,7 +11,7 @@ class AdminPersistenceService:
         pass
         
     def addQuotes(attribute):
-        if attribute != NULL:
+        if attribute is not None and attribute != "NULL":
             retstr = '"' + attribute + '"'
             
         else:
@@ -149,7 +149,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='UPDATE team SET teamManagerID=' + addQuotes(teamId) + ' WHERE employeeID=' + addQuotes(manager.employeeId) + ''
+            query='UPDATE team SET teamManagerID=' + addQuotes(teamId) + ' WHERE teamID=' + addQuotes(manager.teamId) + ''
             cur.execute(query)
             dbConnection.connection.commit()
             teamI= cur.rowcount
@@ -226,7 +226,7 @@ class AdminPersistenceService:
         
         
         dbConnection.connection.close()
-        return (empI, teamMemI, teamManI)
+        return (teamI, empI, teamMemI, teamManI)
 
     """
     Create new record in Team table for team with data stored in Team object
@@ -280,7 +280,15 @@ class AdminPersistenceService:
             print(error)
             return error
             
-        # TODO team if teamID is set
+        
+        try:
+            query='UPDATE team SET projectID=' + addQuotes(project.projectId) + ' WHERE teamID=' + addQuotes(project.teamId) + ''
+            cur.execute(query)
+            dbConnection.connection.commit()
+            teamI= cur.rowcount
+        except mysql.connector.Error as error:
+            print(error)
+            return error
             
         dbConnection.connection.close()
-        return projrows
+        return (projrows,teamI)

@@ -39,7 +39,7 @@ class AdminController(EmployeeController):
         validRole = isfixed(role,"position")
         if validID == True and validRole == True:
             setRole=AdminPersistenceService.setEmployeeRole(employeeId, role)
-            if setRole.rowcount == 0:
+            if setRole == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
             else
@@ -50,8 +50,7 @@ class AdminController(EmployeeController):
             return validID
         else:
             return validRole
-        pass
-
+        
     """
     Register new Employee
     """
@@ -82,9 +81,22 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def assignManagerToTeam(managerId, teamId):
-        AdminPersistenceService.assignManagerToTeam(managerId, teamId)
-        pass
-
+        validID = isfixed(managerId, "employeeID")
+        validTeam = isfixed(teamId,"teamID")
+        if validID == True and validTeam == True:
+            setTeam=AdminPersistenceService.assignManagerToTeam(managerId, teamId)
+            if setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0:
+                retstr = "employee with ID: " + employeeId + " not found"
+                return retstr
+            else
+                return f'Success manager has been assigned to team!'
+        else if validID != True and validTeam != True:
+            return (validID,validTeam)
+        else if validID != True:
+            return validID
+        else:
+            return validTeam
+        
     """
     Create team with data stored in Team object
     """

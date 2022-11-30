@@ -7,7 +7,7 @@ class EmployeePersistenceService:
         pass
     
     def addQuotes(attribute):
-        if attribute != NULL:
+        if attribute is not None and attribute != "NULL":
             retstr = '"' + attribute + '"'
             
         else:
@@ -57,12 +57,12 @@ class EmployeePersistenceService:
             + ', birthDate=' + addQuotes(employee.birthDate)
             + ', sickDaysYearly=' + addQuotes(employee.sickDaysYearly)
             + ', sickDaysRemaining=' + addQuotes(employee.sickDaysRemaining)
-            + ', vacationDaysYearly=' addQuotes(employee.vacationDaysYearly)
-            + ', vacationDaysRemaining=' addQuotes(employee.vacationDaysRemaining)
+            + ', vacationDaysYearly=' + addQuotes(employee.vacationDaysYearly)
+            + ', vacationDaysRemaining=' + addQuotes(employee.vacationDaysRemaining)
             + ', address=' + addQuotes(employee.address)
             + ', phonenumber=' + addQuotes(employee.phonenumber)
             + ', workEmail=' + addQuotes(employee.workEmail)
-            + ', personalEmail=' addQuotes(employee.personalEmail)
+            + ', personalEmail=' + addQuotes(employee.personalEmail)
             + ', directDepositNumber=' + addQuotes(employee.directDepositNumber)
             + ', ssn=' + addQuotes(employee.ssn) + ' WHERE employeeID=' + addQuotes(employee.employeeId) + ''
             cur.execute(query)
