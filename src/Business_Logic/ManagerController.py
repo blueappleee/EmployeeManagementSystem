@@ -1,5 +1,5 @@
-from Data_Objects.Manager import Manager
-from Persistence.ManagerPersistenceService import ManagerPersistenceService
+from src.Data_Objects import Manager
+from src.Persistence import ManagerPersistenceService
 
 """
 Manager Controller that Manager Interface will call for logic of process

@@ -1,4 +1,4 @@
-from Data_Objects.Employee import Employee
+from src.Data_Objects import Employee
 """
 Manager class for methods of employee and attributes
 """
