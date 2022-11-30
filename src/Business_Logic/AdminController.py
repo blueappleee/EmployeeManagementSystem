@@ -7,24 +7,49 @@ from Persistence.AdminPersistenceService import AdminPersistenceService
 """
 Admin Controller that Admin Interface will call for logic of process
 """
-class AdminController:
+class AdminController(EmployeeController):
+    Employee_rules = {'employeeID':'fixed', 'teamID':'fixed', 'managerID':'fixed', 
+    'password':32, 'empType':3, 'fName':20, 'address':50,
+    'lName': 20,'phoneNumber': 10,'workEmail': 40,'personalEmail':40,'directDepositNumber' :21,'ssn':9 , 'position': 40,
+    'salary': 'int',                            
+    'startDate': 'date','birthDate': 'date',
+    'sickDaysRemaining' : 'sint','vacationDaysYearly': 'sint','vacationDaysRemaining' : 'sint', 'sickDaysYearly':'sint'}
+
     def __init__(self):
-        pass
+        super.__init__()
 
     """
     Search for admin by id to return
     """
     @staticmethod
     def searchAdminById(adminId) -> SysAdmin:
-        return AdminPersistenceService.searchAdminById(adminId)
-        pass
+        validID = isfixed(adminId, "employeeID")
+        if validID == True:
+            self.dataobject=AdminPersistenceService.searchAdminById(adminId)
+            return self.dataobject
+        else:
+            return validID
 
     """
     Set Employee Role
     """
     @staticmethod
     def setEmployeeRole(employeeId, role):
-        AdminPersistenceService.setEmployeeRole(employeeId, role)
+        validID = isfixed(employeeId, "employeeID")
+        validRole = isfixed(role,"position")
+        if validID == True and validRole == True:
+            setRole=AdminPersistenceService.setEmployeeRole(employeeId, role)
+            if setRole.rowcount == 0:
+                retstr = "employee with ID: " + employeeId + " not found"
+                return retstr
+            else
+                return f'Success attribute position has been modified!'
+        else if validID != True and validRole != True:
+            return (validID,validRole)
+        else if validID != True:
+            return validID
+        else:
+            return validRole
         pass
 
     """
@@ -40,7 +65,16 @@ class AdminController:
     """
     @staticmethod
     def setEmployeeInactive(employeeId):
-        AdminPersistenceService.setEmployeeInactive(employeeId)
+        validID=isfixed(employeeId, "employeeID")
+        if validID == True:
+            setInactive = AdminPersistenceService.setEmployeeInactive(employeeId)
+            if setInactive[2] == 0:
+                retstr = "employee with ID: " + employeeId + " not found"
+                return retstr
+            else:
+                return f'Success employee has been set Inactive!'
+        else:
+            return validID
         pass
 
     """
