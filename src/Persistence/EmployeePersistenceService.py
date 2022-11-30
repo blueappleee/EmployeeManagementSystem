@@ -23,7 +23,7 @@ class EmployeePersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='SELECT * FROM employee WHERE employeeID="' employeeId + '"'
+            query='SELECT * FROM employee WHERE employeeID=' addQuotes(employeeId) + ''
             cur.execute(query)
             result=cur.fetchall()
             employee = Employee(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9],
