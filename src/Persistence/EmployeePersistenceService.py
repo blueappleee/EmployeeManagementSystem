@@ -33,7 +33,8 @@ class EmployeePersistenceService:
     @staticmethod
     def updateEmployeeInformation(employee: Employee):
         cur = dbConnection.connection.cursor()
-
+        empU = ""
+        teamMemI=""
         try:
             query='UPDATE employee SET password="' + employee.password
             + '", empType="' + employee.empType
@@ -56,13 +57,74 @@ class EmployeePersistenceService:
             + '", directDepositNumber="' + employee.directDepositNumber
             + '", ssn="' + employee.ssn + '" WHERE employeeID="' + employee.employeeId + '"'
             cur.execute(query)
-            mydb.commit()
+            dbConnection.connection.commit()
+            empU=cur.rowcount
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
+          
+        if employee.teamId != null:
+            try:
+                query='SELECT * FROM teamMembers WHERE employeeID="' employee.employeeId + '"'
+                cur.execute(query)
+                teamRowExists = False
+                memberResult = cur.fetchall()
+                teamMemI=""
+                
+                for row in memberResult:
+                    if row[0] != teamId:
+                        dropQuery = 'DELETE FROM teamMembers WHERE employeeID="' + employee.employeeId + '" AND teamID="' + employee.teamId + '"'
+                        cur.execute(sql)
+                        dbConnection.connection.commit()
+                    else:
+                        teamRowExists=True
+                        
+                if teamRowExists==False:
+                    try:
+                        query='INSERT INTO teamMembers (teamID, employeeID) VALUES ("' + employee.teamId + '", "' + employee.employeeId +  '")'
+                        cur.execute(query)
+                        dbConnection.connection.commit()
+                        teamMemI = cur.rowcount
+                    except mysql.connector.Error as error:
+                        print(error)
+                        return error
+                
+            except mysql.connector.Error as error:
+                print(error)
+                return error
             
-        # do teamMember and empManagerd query as well to ensure set properly    
+        if employee.managerId != null:
+            try:
+                query='SELECT * FROM empManaged WHERE employeeID="' employee.employeeId + '"'
+                cur.execute(query)
+                teamRowExists = False
+                managedResult = cur.fetchall()
+                managedI=""
+                
+                for row in managedResult:
+                    if row[0] != employee.managerId:
+                        dropQuery = 'Delete FROM empManaged WHERE employeeID="' + employee.employeeId + '" AND managerID="' + employee.managerId + '"'
+                        cur.execute(sql)
+                        dbConnection.connection.commit()
+                    else:
+                        teamRowExists=True
+                        
+                if teamRowExists==False:
+                    try:
+                        query='INSERT INTO empManaged (managerID, employeeID) VALUES ("' + employee.managerId + '" , "' employee.employeeId + '")'
+                        cur.execute(query)
+                        dbConnection.connection.commit()
+                        managedI=cur.rowcount
+                    except mysql.connector.Error as error:
+                        print(error)
+                        return error
+                
+            except mysql.connector.Error as error:
+                print(error)
+                return error    
+                
         dbConnection.connection.close()
+        return (empU,teamMemI,managedI)
 
     """
     Update Employee's work hours
@@ -81,5 +143,47 @@ class EmployeePersistenceService:
             print(error)
             return error
             
-        # need to add to team hours worked
+        if employee.teamId != null:
+            try:
+                query='SELECT projectID FROM team WHERE teamID="' employee.teamId + '"'
+                cur.execute(query)
+                projectIDR=cur.fetchall()
+                projectID=projectIDR[0]
+
+            except mysql.connector.Error as error:
+                print(error)
+                sys.exit(1)
+        
+            try:
+                query='SELECT * FROM teamHoursWorked WHERE teamID="' employee.teamId + '" AND projectID="' + projectID + '"'
+                cur.execute(query)
+                teamRowExists = False
+                teamHoursResult = cur.fetchall()
+                teamHourI=""
+                
+                if teamHoursResult = []:
+                    try:
+                        query='INSERT INTO teamHoursWorked (teamID, projectID, hourAmount) VALUES ("' + employee.teamId + '", "' + projectID + '", "' + workTime + '")'
+                        cur.execute(query)
+                        dbConnection.connection.commit()
+                        teamHourI = cur.rowcount
+                    except mysql.connector.Error as error:
+                        print(error)
+                        return error
+                else:
+                    newHours = int(teamHoursResult[2]) + int(hourAmount)
+                    try:
+                        query='UPDATE teamHoursWorked set hourAmount="' + newHours + '" WHERE teamID="' + employee.teamId + '" AND projectID="' + projectID +  '"'
+                        cur.execute(query)
+                        dbConnection.connection.commit()
+                        teamHourI = cur.rowcount
+                    except mysql.connector.Error as error:
+                        print(error)
+                        return error
+                        
+            except mysql.connector.Error as error:
+                print(error)
+                sys.exit(1)  
+            
         dbConnection.connection.close()
+        return (hoursWorkedR, teamHourI)

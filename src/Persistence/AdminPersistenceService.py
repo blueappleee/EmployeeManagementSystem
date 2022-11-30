@@ -36,7 +36,16 @@ class AdminPersistenceService:
     """
     @staticmethod
     def setEmployeeRole(employeeId, role):
-        pass
+        try:
+            query='UPDATE employee SET position="' + role + '" WHERE employeeID="' + employeeId + '"'
+            cur.execute(query)
+            posResult = cur.rowcount
+            
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+            
+        return posResult
 
     """
     Register new Employee
@@ -46,7 +55,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
         teamI=""
         manI=""
-        
+        #update usecase, this doesnt need to include setEmployeeRoel??
         try:
             query='INSERT INTO employee (employeeID, password, empType, teamID, managerID, fname, lname, salary, position, startDate, birthDate, sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, address, phonenumber, workEmail, personalEmail, directDepositNumber, ssn) VALUES ("'
                    + employee.employeeId + '", "' + employee.password + '", "' + employee.empType + '", "' + employee.teamId + '", "' + employee.managerId + '", "'
@@ -73,7 +82,7 @@ class AdminPersistenceService:
                 print(error)
                 return error
             
-        if managerID != null:
+        if employee.managerId != null:
             try:
                 query='INSERT INTO empManaged (managerID, employeeID) VALUES ("' + employee.managerId + '" , "' employee.employeeId + '")'
                 cur.execute(query)
@@ -92,7 +101,35 @@ class AdminPersistenceService:
     """
     @staticmethod 
     def setEmployeeInactive(employeeId):
-        pass
+        try:
+            query='DELETE FROM empManaged WHERE employeeID="' + employeeId + '"'
+            cur.execute(query)
+            teamManRowExists = False
+            managedResult = cur.rowcount
+            
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+            
+        try:
+            query='DELETE FROM teamMembers WHERE employeeID="' + employeeId + '"'
+            cur.execute(query)
+            memberResult = cur.rowcount
+            
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+    
+        try:
+            query='UPDATE employee SET position="Inactive" WHERE employeeID="' + employeeId + '"'
+            cur.execute(query)
+            posResult = cur.rowcount
+            
+        except mysql.connector.Error as error:
+            print(error)
+            sys.exit(1)
+            
+        return (managedResult, memberResult, posResult)
 
     """
     Update Database to assign a manager to a team
@@ -130,7 +167,7 @@ class AdminPersistenceService:
             
             for row in memberResult:
                 if row[0] != teamId:
-                    dropQuery = 'Delete FROM teamMembers WHERE employeeID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
+                    dropQuery = 'DELETE FROM teamMembers WHERE employeeID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
                     cur.execute(sql)
                     dbConnection.connection.commit()
                 else:
@@ -148,7 +185,7 @@ class AdminPersistenceService:
             
         except mysql.connector.Error as error:
             print(error)
-            return error
+            sys.exit(1)
         
         try:
             query='SELECT * FROM teamManaged WHERE managerID="' manager.employeeId + '"'
@@ -159,7 +196,7 @@ class AdminPersistenceService:
             
             for row in managedResult:
                 if row[1] != teamId:
-                    dropQuery = 'Delete FROM teamManaged WHERE managerID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
+                    dropQuery = 'DELETE FROM teamManaged WHERE managerID="' + manager.employeeId + '" AND teamID="' + teamId + '"'
                     cur.execute(sql)
                     dbConnection.connection.commit()
                 else:
@@ -176,7 +213,7 @@ class AdminPersistenceService:
                     return error
         except mysql.connector.Error as error:
             print(error)
-            return error
+            sys.exit(1)
         
         
         dbConnection.connection.close()
