@@ -248,21 +248,21 @@ class AdminPersistenceService:
             
         # fix this to insert into teamMembers table    
         membersI = []
-        
-        for member in team.teamMembers:
-            try:
-                query='INSERT INTO teamMember (teamID, employeeID) VALUES (' + self.addQuotes(team.teamId) + ', ' + self.addQuotes(member) + ')'
-                cur.execute(query)
-                dbConnection.connection.commit()
-                membersI.append(cur.rowcount)
-                
-                query='UPDATE employee SET teamID=' self.addQuotes(team.teamId) + ' WHERE employeeID=' + self.addQuotes(member) + ''
-                cur.execute(query)
-                dbConnection.connection.commit()
-                membersI.append(cur.rowcount)
-            except mysql.connector.Error as error:
-                print(error)
-                return error
+        if team.teamMembers != []:
+            for member in team.teamMembers:
+                try:
+                    query='INSERT INTO teamMember (teamID, employeeID) VALUES (' + self.addQuotes(team.teamId) + ', ' + self.addQuotes(member) + ')'
+                    cur.execute(query)
+                    dbConnection.connection.commit()
+                    membersI.append(cur.rowcount)
+                    
+                    query='UPDATE employee SET teamID=' self.addQuotes(team.teamId) + ' WHERE employeeID=' + self.addQuotes(member) + ''
+                    cur.execute(query)
+                    dbConnection.connection.commit()
+                    membersI.append(cur.rowcount)
+                except mysql.connector.Error as error:
+                    print(error)
+                    return error
         
         dbConnection.connection.close()
         return (teamI, membersI)

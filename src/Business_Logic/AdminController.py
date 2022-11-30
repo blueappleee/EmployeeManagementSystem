@@ -139,11 +139,12 @@ class AdminController(EmployeeController):
                 return f'Invalid team name. Input must be max 20 characters'
         else:
             team.name = "NULL"
-            
-        for member in team.teamMembers:
-            if super().isfixed(member, "employeeID") != True:
-                retStr = "Invalid employeeID for team member: " + member + " , employeeID must be 8 characters"
-                return retStr
+        
+        if team.teamMembers != []:
+            for member in team.teamMembers:
+                if super().isfixed(member, "employeeID") != True:
+                    retStr = "Invalid employeeID for team member: " + member + " , employeeID must be 8 characters"
+                    return retStr
         
         makeTeam=AdminPersistenceService.createTeam(team)
         if makeTeam.contains("mysql.connector.errors"): 
