@@ -51,8 +51,8 @@ class Employee:
         # Check if start date is set otherwise set to current date
         setStartDate = startDate
         if setStartDate is None:
-            date = datetime.now()
-            setStartDate = date.strftime("%Y") + '-' + date.strftime("%m") + '-' + date.strftime("%d")
+            currDate = datetime.now()
+            setStartDate = currDate.strftime("%Y") + '-' + currDate.strftime("%m") + '-' + currDate.strftime("%d")
         cls.startDate = setStartDate
 
         cls.birthDate = birthDate
