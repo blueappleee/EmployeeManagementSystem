@@ -76,7 +76,8 @@ class employeeUI(general_UI):
             format = isdate(workDate,'work date')
         workTime = input("Enter work hours: ")
         workTime = input_shoe_be_num(workTime,'work time')
-        ec.EmployeeController.logWorkHours(self.dataobject,worktype,workTime,workDate)
+        msg = ec.EmployeeController.logWorkHours(self.dataobject,worktype,workTime,workDate)
+        print(msg)
         
     def cmd_UI(self):
         while True:#ask for user input and map to the functions
