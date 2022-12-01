@@ -20,6 +20,21 @@ class AdminController(EmployeeController):
         
     fixed_tp_length = {"projectID":8}
     max_tp_length = {"projectName":20, "projectStatus":20, "teamName":20}
+    
+    def isfixedNULL(input,type):
+        fixLength = super().fixed_length[type]
+        if fixLength == len(input) or if input is None or if input="NULL": return True
+        return f'Error: wrong attribute({type}) format. Must be exactly{fixLength}.'
+        
+    def isMaxNULL(input,type):
+        fixLength = super().Employee_rules[type]
+        if fixLength >= len(input) or if input is None or if input="NULL": return True
+        return f'Error: wrong attribute({type}) format. Must be up to{fixLength}.'
+        
+    def isMax(input,type):
+        fixLength = super().Employee_rules[type]
+        if fixLength >= len(input) or if input is None or if input="NULL": return True
+        return f'Error: wrong attribute({type}) format. Must be exactly{fixLength}.'
 
     def isfixedTP(input,type):
         fixLength = self.fixed_tp_length[type]
@@ -69,8 +84,18 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def registerNewEmployee(employee: Employee):
-        AdminPersistenceService.registerNewEmployee(employee)
-        pass
+        attrValid = {"employeeID": super().isfixed(employee.employeeId, "employeeID"), "password": self.isMax(employee.password, "password"), "empType": super().isfixed(employee.empType, "empType"), "teamID": self.isfixedNULL(employee.teamID, "teamID"),
+        "managerID": self.isfixedNULL(employee.managerId, "employeeID"), "fName": self.isMax(employee.fName, "fName"), "lName": self.isMax(employee.lName, "lName") , "salary": super().isint(employee.salary, "salary"), "position":self.isMax(employee.position,"position"), "startDate": super().isdate(employee.startDate, "startDate"), 
+        "birthDate":super().isdate(employee.birthDate, "birthDate"), "sickDaysYearly": super().issint(employee.sickDaysYearly, "sickDaysYearly"), "sickDaysRemaining":(super().issint(employee.sickDaysRemaining, "sickDaysRemaining") or is None) , "vacationDaysYearly":(super().issint(employee.vacationDaysYearly, "vacationDaysYearly") or is None),
+        "vacationDaysRemaining":super().issint(employee.vacationDaysRemaining, "vacationDaysRemaining"), "address":self.isMaxNULL(employee.address, "address"), "phoneNumber":self.isfixedNULL(employee.phoneNumber,"phoneNumber"),
+        "workEmail":, "personalEmail": self.isMaxNULL(employee.personalEmail, "personalEmail"), "directDepositNumber": super().isfixed(employee.directDepositNumber, "directDepositNumber"), "ssn": super().isfixed(employee.ssn, "ssn")}
+        
+        if all(value==True for value in attrValid.values()):
+            AdminPersistenceService.registerNewEmployee(employee)
+            return f'Success employee has been added!'
+        else:
+            return 'Invalid attribute provided'
+        
 
     """
     Make active employee inactive
