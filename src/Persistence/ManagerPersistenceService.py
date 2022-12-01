@@ -18,12 +18,12 @@ class ManagerPersistenceService:
     Logic to correct a team employee's work hours
     """
     @staticmethod
-    def correctTeamEmployeeWorkHours(teamEmployeeId, workHours, workDate):
+    def correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate):
         cur = dbConnection.connection.cursor()
 
         try:
-            cur.execute("UPDATE hoursWorked SET hourAmount = '%(1)s', workDate = '%(2)s' WHERE employeeID = '%(3)s';" % {"1": workHours, "2": workDate, "3": teamEmployeeId})
-
+            cur.execute("UPDATE hoursWorked SET hourAmount = '%(1)s', workDate = '%(2)s', hourType = '%(3)s' WHERE employeeID = '%(4)s';" % {"1": workHours, "2": workDate, "3": hourType, "4": teamEmployeeId})
+            dbConnection.connection.commit()
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
@@ -96,12 +96,17 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
+            # remove the employee from current team
+            cur.execute("DELETE FROM teamMembers WHERE employeeID = '%(1)s';" % {"1": teamEmployeeId})
+            dbConnection.connection.commit()
+
             # update the team information to the employee table
             cur.execute("UPDATE employee SET teamID = '%(1)s' WHERE employeeID = '%(2)s';" % {"1": teamID, "2": teamEmployeeId})
+            dbConnection.connection.commit()
 
             # insert the employee information to the teamMembers table
             cur.execute("INSERT INTO teamMembers VALUES ('%(1)s', '%(2)s');" % {"1": teamID, "2": teamEmployeeId})
-
+            dbConnection.connection.commit()
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
@@ -118,6 +123,9 @@ class ManagerPersistenceService:
 
         try:
             cur.execute("DELETE FROM teamMembers WHERE teamID = '%(1)s' AND employeeID = '%(2)s';" % {"1": teamID, "2": teamEmployeeId})
+            dbConnection.connection.commit()
+            cur.execute("UPDATE employee SET teamID = 'NULL' WHERE employeeID = '%(1)s';" % {"1": teamEmployeeId})
+            dbConnection.connection.commit()
 
         except mysql.connector.Error as error:
             print(error)
@@ -136,9 +144,11 @@ class ManagerPersistenceService:
         try:
             # update the project information to the Team table
             cur.execute("UPDATE team SET projectID = '%(1)s' WHERE teamID = '%(2)s';" % {"1": projectId, "2": teamId})
+            dbConnection.connection.commit()
 
             # update the team information to the project table
             cur.execute("UPDATE project SET currentTeamID = '%(1)s' WHERE projectID = '%(2)s';" % {"1": teamId, "2": projectId})
+            dbConnection.connection.commit()
 
         except mysql.connector.Error as error:
             print(error)
@@ -177,7 +187,7 @@ class ManagerPersistenceService:
 
         try:
             # cur.execute("SELECT employeeId, empType, teamId, managerId, fName, lName, salary, position, phoneNumber, workEmail FROM employee WHERE employeeID = '%(1)s' AND empType = mng;" % {"1": managerID})
-            cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s' AND empType = mng;" % {"1": managerID})
+            cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s';" % {"1": managerID})
             record = cur.fetchall()
             # print("Total number of rows in table", cur.rowcount)
 
