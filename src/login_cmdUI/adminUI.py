@@ -11,6 +11,7 @@ class adminUI(employeeUI):
         self.command_dict['inactive'] = self.setInactive
         self.command_dict['registerp'] = self.registerNewProject
         self.command_dict['registert'] = self.registerNewTeam
+		self.command_dict['assign'] = self.assignMtoT
         
     """
     Register new Employee
@@ -71,8 +72,18 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
             print("Wrong number of attribute, make sure to write (, ,) for a null input")
             return
         AdminController.registerNewEmployee(Employee(*everything))
-
-
+	
+	"""
+    Assign a manager to a team
+    """    
+	def assignMtoT(self, managerID):
+	    managerID = input_shoe_be_num(managerID,'teamID')
+        teamID = input("Enter the teamID: ")
+        teamID = input_shoe_be_num(teamID,'teamID')
+        AdminController.assignManagerToTeam(managerID,teamID)
+		
+		
+		
     def welcome(self,name):
         print(f'Hi, Admin {name}. Welcome!')
         print(
