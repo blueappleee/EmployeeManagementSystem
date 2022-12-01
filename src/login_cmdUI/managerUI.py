@@ -19,14 +19,22 @@ class managerUI(employeeUI):
     """
     def assign_team(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id) #this line need further detail for dataobject INFO
+        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id) #this line need further detail for dataobject INFO
+        if msg == None:
+            print(f'Assign employee {employeeID} to your team success!')
+            return
+        print(msg)
     """
     Assign Team to Project
     """
-    def assign_project(self,team):
+    def assign_project(self,projectID):
         team = input_shoe_be_num(team,'teamID')
         projectID = input("enter the project id you wanna assign: ")
-        ManagerController.assignTeamProject(projectID,team)
+        msg = ManagerController.assignTeamProject(projectID,team)
+        if msg == None:
+            print(f'Assign project {employeeID} to your team success!')
+            return
+        print(msg)
     """
     correct a team employee's work hours
     """
@@ -40,34 +48,54 @@ class managerUI(employeeUI):
             print(date)
             workDate = input("Enter a valid date(YYYY-MM-DD): ")
             date = isdate(workDate,'work date')
-        ManagerController.correctTeamEmployeeWorkHours(hours)
+        msg = ManagerController.correctTeamEmployeeWorkHours(hours)
+        if msg == None:
+            print(f'Correct work hour for employee{empID} on {date} success!')
+            return
+        print(msg)
+        
     """
     Get summary stats on team's employees
     """
     def teamEmployeesSummary(self,team):
         team = input_shoe_be_num(team,'teamID')
-        ManagerController.getSummaryTeamEmployeeData(team)
+        emplist = ManagerController.getSummaryTeamEmployeeData(team)
+        if isinstance(emplist, str):
+            print(emplist)
+            return
+        for emp in emplist:
+            print(emp)
+            
     """
     Get Specific Team Employee's work related data
     """
     def employeeWorkdata(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        ManagerController.getTeamEmployeeWorkData(employeeID)
+        datalist = ManagerController.getTeamEmployeeWorkData(employeeID)
+        if isinstance(datalist, str):
+            print(datalist)
+            return
+        for data in datalist:
+            print(data)
         #and present to the cmd
     """
     Get project details
     """
     def projectDetails(self,project):
         project  = input_shoe_be_num(project,'projectID')
-        ManagerController.getProjectDetails(project)
-        #and present to the cmd
+        p = ManagerController.getProjectDetails(project)
+        print(p)
+        
     """
     Remove Employee from team
     """
     def removeEmployee(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        ManagerController.removeEmployeeFromTeam(employeeID)
-
+        msg = ManagerController.removeEmployeeFromTeam(employeeID)
+        if msg == None
+            print(f'remove employee{empID} from your team success!')
+            return
+        print(msg)
     def welcome(self,name):
         print(f'Hi, Manager {name}. Welcome!')
         print(
@@ -75,7 +103,7 @@ class managerUI(employeeUI):
 update      *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info
 report      *worktype = [something not sure]    To log your working hours
 assigne     #employeeID                         To assign an employee to your team
-assignt     #teamID                             To assign toyr team to a project
+assignt     #projectID                          To assign toyr team to a project
 correct     #hours                              To correct the work hours for your team
 teamsum                                         To get the working Info summary of your team
 workdata    #employeeID                         To get working Info summary of the employee
