@@ -71,17 +71,13 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            # FIXME wait for testing the sql query
+            # TODO wait for testing the sql query
             cur.execute("SELECT project.projectID, project.projectName, project.currentTeamID, project.projectStatus FROM project, team, employee WHERE team.teamID = project.currentTeamID AND team.teamID = employee.teamID AND employee.employeeID = '%(1)s' AND employee.teamID = '%(2)s';" % {"1": teamEmployeeID, "2": teamID})
 
             records = cur.fetchall()
             projectList = []
             for row in records:
                 projectInstance = Project(row[0], row[1], row[2], row[3])
-                # projectInstance.projectId = row[0]
-                # projectInstance.Name = row[1]
-                # projectInstance.currentTeamId = row[2]
-                # projectInstance.status = row[3]
 
                 projectList.append(projectInstance)
 

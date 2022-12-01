@@ -7,7 +7,8 @@ from tabulate import tabulate
 
 def validateDate(date):
     try:
-        datetime.striptime(date, '%Y-%m-%d')
+        datetime.datetime.striptime(date, '%Y-%m-%d')
+        return True
     except ValueError:
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
 
