@@ -22,7 +22,13 @@ class adminUI(employeeUI):
         roles = {'mng': 1,'reg':1, 'adm':1}
         while role not in roles:
             role = input("Enter a valid role(mng/reg/adm): ")
-        AdminController.setEmployeeRole(employeeID,role)
+        msg = AdminController.setEmployeeRole(employeeID,role)
+	    if isinstance(msg, str):
+            print(msg)
+            return
+        print("Invalid ID")
+            
+		
 
     
         
@@ -31,7 +37,11 @@ class adminUI(employeeUI):
     """
     def setInactive(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        AdminController.setEmployeeInactive(employeeID)
+        msg = AdminController.setEmployeeInactive(employeeID)
+        if isinstance(msg, str):
+            print(msg)
+            return
+        print("Invalid ID")
 
     """
     Register new Employee
@@ -45,7 +55,8 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         if len(everything) != 19:
             print("Wrong number of attribute, make sure to write (, ,) for a null input")
             return
-        AdminController.registerNewEmployee(Employee(*everything))
+        msg = AdminController.registerNewEmployee(Employee(*everything))
+        print(msg)
 
     """
     Register new Team
@@ -58,7 +69,8 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         if len(everything) != 3:
             print("Wrong number of attribute, make sure to write (, ,) for a null input")
             return
-        AdminController.registerNewEmployee(Employee(*everything))
+        msg = AdminController.registerNewEmployee(Employee(*everything))
+        print(msg)
 
     """
     Register new Team
@@ -71,7 +83,8 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         if len(everything) != 4:
             print("Wrong number of attribute, make sure to write (, ,) for a null input")
             return
-        AdminController.registerNewEmployee(Employee(*everything))
+        msg = AdminController.registerNewEmployee(Employee(*everything))
+        print(msg)
 	
 	"""
     Assign a manager to a team
@@ -80,7 +93,11 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
 	    managerID = input_shoe_be_num(managerID,'teamID')
         teamID = input("Enter the teamID: ")
         teamID = input_shoe_be_num(teamID,'teamID')
-        AdminController.assignManagerToTeam(managerID,teamID)
+        msg = AdminController.assignManagerToTeam(managerID,teamID)
+        if isinstance(msg, str):
+            print(msg)
+            return
+        print("Invalid teamID or managerID")
 		
 		
 		
