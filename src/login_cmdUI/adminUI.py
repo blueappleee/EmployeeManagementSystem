@@ -11,7 +11,7 @@ class adminUI(employeeUI):
         self.command_dict['inactive'] = self.setInactive
         self.command_dict['registerp'] = self.registerNewProject
         self.command_dict['registert'] = self.registerNewTeam
-		self.command_dict['assign'] = self.assignMtoT
+        self.command_dict['assign'] = self.assignMtoT
         
     """
     Register new Employee
@@ -23,7 +23,7 @@ class adminUI(employeeUI):
         while role not in roles:
             role = input("Enter a valid role(mng/reg/adm): ")
         msg = AdminController.setEmployeeRole(employeeID,role)
-	    if isinstance(msg, str):
+        if isinstance(msg, str):
             print(msg)
             return
         print("Invalid ID")
@@ -86,11 +86,11 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         msg = AdminController.registerNewEmployee(Employee(*everything))
         print(msg)
 	
-	"""
+    """
     Assign a manager to a team
     """    
-	def assignMtoT(self, managerID):
-	    managerID = input_shoe_be_num(managerID,'teamID')
+    def assignMtoT(self, managerID):
+        managerID = input_shoe_be_num(managerID,'teamID')
         teamID = input("Enter the teamID: ")
         teamID = input_shoe_be_num(teamID,'teamID')
         msg = AdminController.assignManagerToTeam(managerID,teamID)

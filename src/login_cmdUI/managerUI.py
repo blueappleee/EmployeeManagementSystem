@@ -32,7 +32,7 @@ class managerUI(employeeUI):
         projectID = input("enter the project id you wanna assign: ")
         msg = ManagerController.assignTeamProject(projectID,team)
         if msg == None:
-            print(f'Assign project {employeeID} to your team success!')
+            print(f'Assign project {projectID} to your team success!')
             return
         print(msg)
     """
@@ -92,8 +92,8 @@ class managerUI(employeeUI):
     def removeEmployee(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
         msg = ManagerController.removeEmployeeFromTeam(employeeID)
-        if msg == None
-            print(f'remove employee{empID} from your team success!')
+        if msg == None:
+            print(f'remove employee{employeeID} from your team success!')
             return
         print(msg)
     def welcome(self,name):
