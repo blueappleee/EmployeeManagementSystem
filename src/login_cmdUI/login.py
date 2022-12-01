@@ -1,4 +1,4 @@
-import  sys, pyfiglet, signal,os
+import  sys, pyfiglet, signal,os,hashlib
 from Business_Logic import EmployeeController as ec
 from UI_factory import UI_generator
 from getpass import getpass
@@ -12,12 +12,22 @@ def Destruct(signum,frame):
 
 signal.signal(signal.SIGINT,Destruct)
 
+def login_session():
+    uid = input("enter user ID: ")
+    pwd = getpass("enter user password: ").encode()
+    pwd = hashlib.md5(pwd).hexdigest()
+    return uid, pwd
+
 def main():
     ascii_banner = pyfiglet.figlet_format("System Login")
     print(ascii_banner)
-    uid = input("enter user ID: ")
-    pwd = getpass("enter user password: ")
+    uid, pwd = login_session()
     employee  = ec.EmployeeController.getEmployeeById(uid)
+    while str(employee.password) != pwd:
+        print('Invalid UserID or Password, Please try again.')
+        uid, pwd = login_session()
+        pwd = ''
+        employee  = ec.EmployeeController.getEmployeeById(uid)
     os.system('cls' if os.name == 'nt' else 'clear')
     """
     query uid and pwd 
@@ -25,10 +35,10 @@ def main():
     if either not found,notify then ask for inupt
     if not match, notify then ask for input
     """
-    userAccessLevel = "E" #shuold be employee.level something
+    userAccessLevel = employee.empType 
     UIgenerate = UI_generator()
-    cmdUI = UIgenerate.generate(employee.empType,uid)
-    cmdUI.assignDataObject(employee)
+    cmdUI = UIgenerate.generate(userAccessLevel,employee)
+    cmdUI.welcome(employee.fName)
     cmdUI.cmd_UI()
     
 

@@ -1,6 +1,6 @@
 from Data_Objects.Employee import Employee
 from Persistence.EmployeePersistenceService import EmployeePersistenceService
-import datetime
+import datetime ,hashlib
 
 """
 Employee Controller that Employee Interface will call for logic of process
@@ -10,14 +10,16 @@ class EmployeeController:
     Rules for employee table:1. fixed lenth attributes IDs 2.date 3.integer(max value) 4.year(365)
     rest are char vector with upper bound
     """
-    Employee_rules = {'employeeID':'fixed', 'teamID':'fixed', 'managerID':'fixed', 
-    'password':32, 'empType':3, 'fName':20, 'address':50,
+    Employee_rules = {'employeeID':'fixed', 'teamID':'fixed', 'managerID':'fixed', 'empType':'fixed',
+    'password':32,  'fName':20, 'address':50,
     'lName': 20,'phoneNumber': 10,'workEmail': 40,'personalEmail':40,'directDepositNumber' :21,'ssn':9 , 'position': 40,
     'salary': 'int',                            
     'startDate': 'date','birthDate': 'date',
     'sickDaysRemaining' : 'sint','vacationDaysYearly': 'sint','vacationDaysRemaining' : 'sint', 'sickDaysYearly':'sint'}
     
-    fixed_length = {'employeeID':6,'teamID':4,'managerID':6}
+    #hoursWorked(employeeID CHAR(6) NOT NULL, hourType CHAR(1) NOT NULL, hourAmount TINYINT NOT NULL, workDate DATE NOT NULL
+    #hours_rules = {'employeeID':'fixed', 'hourType' : 'fixed', 'hourAmount' : 'hour', 'workDate': 'date'}
+    fixed_length = {'employeeID':6,'teamID':4,'managerID':6,'empType':3,}
     def __init__(self):
         
         self.dataobject = {}
@@ -48,7 +50,10 @@ class EmployeeController:
             return True
         except ValueError:
             return f'Error: wrong attribute({type}) format. Should be YYYY-MM-DD with valid date'
-
+    @staticmethod
+    def istime(input,type):
+        if input < 24 and input > 0: return True
+        return f'Error: wrong attribute({type}) format. Should be a number within (0,24).'
 
     """
     Logic to update employee information
@@ -79,9 +84,16 @@ class EmployeeController:
     Logic to log an employees work hours
     """
     @staticmethod
-    def logWorkHours(employee: Employee, workType, workTime):
+    def logWorkHours(employee: Employee, workType, workTime, workDate):
+        if workType not in ['W','S','V']:#valid type
+            return f'Sorry, valid work type includes: w, s, v.'
+        msg = EmployeeController.istime('work type', workTime)
+        if msg != True:#valid time
+            return msg
+        msg = EmployeeController.isdate('work date', workDate)
+        if msg != True:#valid date
+            return msg
         EmployeePersistenceService.logWorkHours(employee, workType, workTime)
-        pass
 
     """
     Get Employee by Id
@@ -90,6 +102,7 @@ class EmployeeController:
     def getEmployeeById(employeeId) -> Employee:#!!!!!!only for testing UI and business logic layer!!!!!
         #self.dataobject = query result
         #return self.dataobject copy
-        return Employee(1,1,'E',1,1,'zi','l',11,'senitor','2000/1/1','2000/1/1',
+        a = hashlib.md5(b'1')
+        return Employee(1,a.hexdigest(),'adm',1,1,'zi','l',11,'senitor','2000/1/1','2000/1/1',
         365,0,0,0,'somewhere','519','43@aa.com','zi@out.com',111,111)
         #return EmployeePersistenceService.searchEmployeeById(employeeId)
