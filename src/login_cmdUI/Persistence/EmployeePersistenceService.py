@@ -33,7 +33,6 @@ class EmployeePersistenceService:
             query='SELECT * FROM employee WHERE employeeID=' + EmployeePersistenceService.addQuotes(employeeId) + ''
             cur.execute(query)
             result=cur.fetchone()
-            print(result)
             employee = Employee(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9],
                  result[10], result[11], result[12], result[13], result[14],
                  result[15], result[16], result[17], result[18], result[19], result[20])
@@ -70,7 +69,7 @@ class EmployeePersistenceService:
                 memberResult = cur.fetchall()
                 
                 for row in memberResult:
-                    if row[0] != teamId:
+                    if row[0] != employee.teamId:
                         dropQuery = 'DELETE FROM teamMembers WHERE employeeID=' + EmployeePersistenceService.addQuotes(employee.employeeId) + ' AND teamID=' + EmployeePersistenceService.addQuotes(employee.teamId) + ''
                         cur.execute(sql)
                         dbConnection.connection.commit()
