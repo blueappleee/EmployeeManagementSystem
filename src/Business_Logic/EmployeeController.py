@@ -99,10 +99,8 @@ class EmployeeController:
     Get Employee by Id
     """
     @staticmethod
-    def getEmployeeById(employeeId) -> Employee:#!!!!!!only for testing UI and business logic layer!!!!!
-        #self.dataobject = query result
-        #return self.dataobject copy
-        a = hashlib.md5(b'1')
-        return Employee(1,a.hexdigest(),'adm',1,1,'zi','l',11,'senitor','2000/1/1','2000/1/1',
-        365,0,0,0,'somewhere','519','43@aa.com','zi@out.com',111,111)
-        #return EmployeePersistenceService.searchEmployeeById(employeeId)
+    def getEmployeeById(employeeId) -> Employee:
+        # a = hashlib.md5(b'1')
+        # return Employee(1,a.hexdigest(),'adm',1,1,'zi','l',11,'senitor','2000/1/1','2000/1/1',
+        # 365,0,0,0,'somewhere','519','43@aa.com','zi@out.com',111,111)
+        return EmployeePersistenceService.searchEmployeeById(employeeId)
