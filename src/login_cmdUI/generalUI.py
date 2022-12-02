@@ -1,7 +1,6 @@
 import sys,pyfiglet,datetime
-sys.path.append('../src')
 from abc import ABC, abstractmethod
-from Business_Logic.EmployeeController import EmployeeController
+from Business_Logic import EmployeeController as ec
 
 def input_shoe_be_num(string,type) -> int:
     while not string.isnumeric():
@@ -61,7 +60,7 @@ class employeeUI(general_UI):
         changed_attribute = input("changed value: ")
         setattr(self.dataobject, attribute, changed_attribute)
         #this line need fuether detailc for dataobject INFO
-        msg = EmployeeController.updateEmployeeInformation(attribute,self.dataobject)
+        msg = ec.EmployeeController.updateEmployeeInformation(attribute,self.dataobject)
         print(msg)
 
     """
@@ -77,7 +76,7 @@ class employeeUI(general_UI):
             format = isdate(workDate,'work date')
         workTime = input("Enter work hours: ")
         workTime = input_shoe_be_num(workTime,'work time')
-        msg = EmployeeController.logWorkHours(self.dataobject,worktype,workTime,workDate)
+        msg = ec.EmployeeController.logWorkHours(self.dataobject,worktype,workTime,workDate)
         print(msg)
         
     def cmd_UI(self):

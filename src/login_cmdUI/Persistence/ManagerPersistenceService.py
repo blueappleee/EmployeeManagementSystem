@@ -1,7 +1,7 @@
-from src import dbConnection
-from src.Data_Objects.Project import Project
-from src.Data_Objects.Employee import Employee
-from src.Data_Objects.Manager import Manager
+from db import dbConnection
+from Data_Objects.Project import Project
+from Data_Objects.Employee import Employee
+from Data_Objects.Manager import Manager
 import sys
 import mysql.connector
 from mysql.connector import Error

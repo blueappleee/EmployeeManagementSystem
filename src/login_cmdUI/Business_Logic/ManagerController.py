@@ -1,7 +1,7 @@
 import datetime
 
-from src.Data_Objects.Manager import Manager
-from src.Persistence import ManagerPersistenceService
+from Data_Objects.Manager import Manager
+from Persistence import ManagerPersistenceService
 from tabulate import tabulate
 
 

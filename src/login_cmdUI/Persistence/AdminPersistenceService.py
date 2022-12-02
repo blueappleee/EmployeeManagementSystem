@@ -66,12 +66,7 @@ class AdminPersistenceService:
         manI=""
         #update usecase, this doesnt need to include setEmployeeRoel??
         try:
-            query='INSERT INTO employee (employeeID, password, empType, teamID, managerID, fname, lname, salary, position, startDate, birthDate, sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, address, phonenumber, workEmail, personalEmail, directDepositNumber, ssn) VALUES ("'
-                   + self.addQuotes(employee.employeeId) + ', ' + self.addQuotes(employee.password) + ', ' + self.addQuotes(employee.empType) + ', ' + self.addQuotes(employee.teamId) + ', ' + self.addQuotes(employee.managerId) + ', '
-                   + self.addQuotes(employee.fname) + ', ' + self.addQuotes(employee.lname) + ', ' + self.addQuotes(employee.salary) + ', ' + self.addQuotes(employee.position) + ', ' + self.addQuotes(employee.startDate.strftime('%Y-%m-%d')) + ', '
-                   + self.addQuotes(employee.birthDate.strftime('%Y-%m-%d')) + ', ' + self.addQuotes(employee.sickDaysYearly) + ', ' + self.addQuotes(employee.sickDaysRemaining) + ', ' + self.addQuotes(employee.vacationDaysYearly) + ', '
-                   + self.addQuotes(employee.vacationDaysRemaining) + ', ' + self.addQuotes(employee.address) + ', ' + self.addQuotes(employee.phonenumber) + ', ' + self.addQuotes(employee.phonenumber) + ', ' + self.addQuotes(employee.workEmail) + ', '
-                   + self.addQuotes(employee.personalEmail) + ', ' + self.addQuotes(employee.directDepositNumber) + ', ' + self.addQuotes(employee.ssn) + ')'
+            query='INSERT INTO employee (employeeID, password, empType, teamID, managerID, fname, lname, salary, position, startDate, birthDate, sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, address, phonenumber, workEmail, personalEmail, directDepositNumber, ssn) VALUES ("' + self.addQuotes(employee.employeeId) + ', ' + self.addQuotes(employee.password) + ', ' + self.addQuotes(employee.empType) + ', ' + self.addQuotes(employee.teamId) + ', ' + self.addQuotes(employee.managerId) + ', ' + self.addQuotes(employee.fname) + ', ' + self.addQuotes(employee.lname) + ', ' + self.addQuotes(employee.salary) + ', ' + self.addQuotes(employee.position) + ', ' + self.addQuotes(employee.startDate.strftime('%Y-%m-%d')) + ', ' + self.addQuotes(employee.birthDate.strftime('%Y-%m-%d')) + ', ' + self.addQuotes(employee.sickDaysYearly) + ', ' + self.addQuotes(employee.sickDaysRemaining) + ', ' + self.addQuotes(employee.vacationDaysYearly) + ', ' + self.addQuotes(employee.vacationDaysRemaining) + ', ' + self.addQuotes(employee.address) + ', ' + self.addQuotes(employee.phonenumber) + ', ' + self.addQuotes(employee.phonenumber) + ', ' + self.addQuotes(employee.workEmail) + ', ' + self.addQuotes(employee.personalEmail) + ', ' + self.addQuotes(employee.directDepositNumber) + ', ' + self.addQuotes(employee.ssn) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
             empI=cur.rowcount
@@ -217,7 +212,7 @@ class AdminPersistenceService:
                     cur.execute(query)
                     dbConnection.connection.commit()
                     teamManI = cur.rowcount
-                except mysql.connector.Error as error:ject
+                except mysql.connector.Error as error:
                     print(error)
                     return error
         except mysql.connector.Error as error:
@@ -236,8 +231,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ('
-                   + self.addQuotes(team.teamId) + ', ' + self.addQuotes(team.teamManagerId) + ', ' + self.addQuotes(team.teamName) + ', ' + self.addQuotes(team.projectId) + ')'
+            query='INSERT INTO team (teamID, teamManagerID, teamName, projectID) VALUES ('+ self.addQuotes(team.teamId) + ', ' + self.addQuotes(team.teamManagerId) + ', ' + self.addQuotes(team.teamName) + ', ' + self.addQuotes(team.projectId) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
             teamI = cur.rowcount
@@ -256,7 +250,7 @@ class AdminPersistenceService:
                     dbConnection.connection.commit()
                     membersI.append(cur.rowcount)
                     
-                    query='UPDATE employee SET teamID=' self.addQuotes(team.teamId) + ' WHERE employeeID=' + self.addQuotes(member) + ''
+                    query='UPDATE employee SET teamID=' + self.addQuotes(team.teamId) + ' WHERE employeeID=' + self.addQuotes(member) + ''
                     cur.execute(query)
                     dbConnection.connection.commit()
                     membersI.append(cur.rowcount)
@@ -275,8 +269,7 @@ class AdminPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            query='INSERT INTO project (projectID, projectName, currentTeamID, projectStatus) VALUES ('
-                   + self.addQuotes(project.projectId) + ', ' + self.addQuotes(project.projectName) + ', ' + self.addQuotes(project.currentTeamId) + ', ' + self.addQuotes(project.projectStatus) + ')'
+            query='INSERT INTO project (projectID, projectName, currentTeamID, projectStatus) VALUES (' + self.addQuotes(project.projectId) + ', ' + self.addQuotes(project.projectName) + ', ' + self.addQuotes(project.currentTeamId) + ', ' + self.addQuotes(project.projectStatus) + ')'
             cur.execute(query)
             dbConnection.connection.commit()
             projrows= cur.rowcount

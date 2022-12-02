@@ -2,12 +2,13 @@ from Data_Objects.Employee import Employee
 from Data_Objects.SysAdmin import SysAdmin
 from Data_Objects.Team import Team
 from Data_Objects.Project import Project
+from Business_Logic import EmployeeController as employeeController
 from Persistence.AdminPersistenceService import AdminPersistenceService
 
 """
 Admin Controller that Admin Interface will call for logic of process
 """
-class AdminController(EmployeeController):
+class AdminController(employeeController.EmployeeController):
     Employee_rules = {'employeeID':'fixed', 'teamID':'fixed', 'managerID':'fixed', 
     'password':32, 'empType':3, 'fName':20, 'address':50,
     'lName': 20,'phoneNumber': 10,'workEmail': 40,'personalEmail':40,'directDepositNumber' :21,'ssn':9 , 'position': 40,
@@ -23,17 +24,17 @@ class AdminController(EmployeeController):
     
     def isfixedNULL(input,type):
         fixLength = super().fixed_length[type]
-        if fixLength == len(input) or if input is None or if input="NULL": return True
+        if fixLength == len(input) or  input is None or input=="NULL": return True
         return f'Error: wrong attribute({type}) format. Must be exactly{fixLength}.'
         
     def isMaxNULL(input,type):
         fixLength = super().Employee_rules[type]
-        if fixLength >= len(input) or if input is None or if input="NULL": return True
+        if fixLength >= len(input) or input is None or input=="NULL": return True
         return f'Error: wrong attribute({type}) format. Must be up to{fixLength}.'
         
     def isMax(input,type):
         fixLength = super().Employee_rules[type]
-        if fixLength >= len(input) or if input is None or if input="NULL": return True
+        if fixLength >= len(input) or input is None or input=="NULL": return True
         return f'Error: wrong attribute({type}) format. Must be exactly{fixLength}.'
 
     def isfixedTP(input,type):
@@ -70,11 +71,11 @@ class AdminController(EmployeeController):
             if setRole == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
-            else
+            else:
                 return f'Success attribute position has been modified!'
-        else if validID != True and validRole != True:
+        elif validID != True and validRole != True:
             return (validID,validRole)
-        else if validID != True:
+        elif validID != True:
             return validID
         else:
             return validRole
@@ -84,13 +85,9 @@ class AdminController(EmployeeController):
     """
     @staticmethod
     def registerNewEmployee(employee: Employee):
-        attrValid = {"employeeID": super().isfixed(employee.employeeId, "employeeID"), "password": self.isMax(employee.password, "password"), "empType": super().isfixed(employee.empType, "empType"), "teamID": self.isfixedNULL(employee.teamID, "teamID"),
-        "managerID": self.isfixedNULL(employee.managerId, "employeeID"), "fName": self.isMax(employee.fName, "fName"), "lName": self.isMax(employee.lName, "lName") , "salary": super().isint(employee.salary, "salary"), "position":self.isMax(employee.position,"position"), "startDate": super().isdate(employee.startDate, "startDate"), 
-        "birthDate":super().isdate(employee.birthDate, "birthDate"), "sickDaysYearly": super().issint(employee.sickDaysYearly, "sickDaysYearly"), "sickDaysRemaining":(super().issint(employee.sickDaysRemaining, "sickDaysRemaining") or is None) , "vacationDaysYearly":(super().issint(employee.vacationDaysYearly, "vacationDaysYearly") or is None),
-        "vacationDaysRemaining":super().issint(employee.vacationDaysRemaining, "vacationDaysRemaining"), "address":self.isMaxNULL(employee.address, "address"), "phoneNumber":self.isfixedNULL(employee.phoneNumber,"phoneNumber"),
-        "workEmail":, "personalEmail": self.isMaxNULL(employee.personalEmail, "personalEmail"), "directDepositNumber": super().isfixed(employee.directDepositNumber, "directDepositNumber"), "ssn": super().isfixed(employee.ssn, "ssn")}
-        
-        if all(value==True for value in attrValid.values()):
+        attrValid ={"employeeID": super().isfixed(employee.employeeId, "employeeID")}
+        #attrValid = {"employeeID": super().isfixed(employee.employeeId, "employeeID"), "password": self.isMax(employee.password, "password"), "empType": super().isfixed(employee.empType, "empType"), "teamID": self.isfixedNULL(employee.teamID, "teamID"), "managerID": self.isfixedNULL(employee.managerId, "employeeID"), "fName": self.isMax(employee.fName, "fName"), "lName": self.isMax(employee.lName, "lName") , "salary": super().isint(employee.salary, "salary"), "position":self.isMax(employee.position,"position"), "startDate": super().isdate(employee.startDate, "startDate"), "birthDate":super().isdate(employee.birthDate, "birthDate"), "sickDaysYearly": super().issint(employee.sickDaysYearly, "sickDaysYearly"), "sickDaysRemaining":(super().issint(employee.sickDaysRemaining, "sickDaysRemaining") or is None) , "vacationDaysYearly":(super().issint(employee.vacationDaysYearly, "vacationDaysYearly") or is None),    "vacationDaysRemaining":super().issint(employee.vacationDaysRemaining, "vacationDaysRemaining"), "address":self.isMaxNULL(employee.address, "address"), "phoneNumber":self.isfixedNULL(employee.phoneNumber,"phoneNumber"), "workEmail":, "personalEmail": self.isMaxNULL(employee.personalEmail, "personalEmail"), "directDepositNumber": super().isfixed(employee.directDepositNumber, "directDepositNumber"), "ssn": super().isfixed(employee.ssn, "ssn")}
+        if (all(value==True for value in attrValid.values())):
             AdminPersistenceService.registerNewEmployee(employee)
             return f'Success employee has been added!'
         else:
@@ -107,7 +104,7 @@ class AdminController(EmployeeController):
             setInactive = AdminPersistenceService.setEmployeeInactive(employeeId)
             if setTeam.contains("mysql.connector.errors"): 
                 return f'An error occurred setting the employee inactive due to an invalid value'
-            else if setInactive[2] == 0:
+            elif setInactive[2] == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
             else:
@@ -126,14 +123,14 @@ class AdminController(EmployeeController):
             setTeam=AdminPersistenceService.assignManagerToTeam(managerId, teamId)
             if setTeam.contains("mysql.connector.errors"): 
                 return f'An error occurred assigning the manager to team due to an invalid value'
-            else if setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0:
+            elif setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0:
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
-            else
+            else:
                 return f'Success manager has been assigned to team!'
-        else if validID != True and validTeam != True:
+        elif validID != True and validTeam != True:
             return (validID,validTeam)
-        else if validID != True:
+        elif validID != True:
             return validID
         else:
             return validTeam
@@ -174,7 +171,7 @@ class AdminController(EmployeeController):
         makeTeam=AdminPersistenceService.createTeam(team)
         if makeTeam.contains("mysql.connector.errors"): 
             return f'An error occurred creating the team'
-        else
+        else:
             return f'Success team has been created!'
 
     """
@@ -207,5 +204,5 @@ class AdminController(EmployeeController):
         makeProject=AdminPersistenceService.createProject(project)
         if makeProject.contains("mysql.connector.errors"): 
             return f'An error occurred creating the project'
-        else
+        else:
             return f'Success project has been created!'
