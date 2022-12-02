@@ -6,10 +6,9 @@ CREATE DATABASE IF NOT EXISTS empManagementdb;
 
 USE empManagementdb;
 
-CREATE TABLE IF NOT EXISTS employee(employeeID CHAR(6) NOT NULL, password VARCHAR(32) NOT NULL, empType CHAR(3) NOT NULL, teamID CHAR(4), managerID CHAR(6), fName VARCHAR(20) NOT NULL, lNAME VARCHAR(20) NOT NULL, salary INT NOT NULL, position VARCHAR(40) NOT NULL, startDate DATE NOT NULL, birthDate DATE, sickDaysYearly SMALLINT NOT NULL, sickDaysRemaining SMALLINT, vacationDaysYearly SMALLINT NOT NULL, vacationDaysRemaining SMALLINT, address VARCHAR(50), phoneNumber VARCHAR(10), workEmail VARCHAR(40) NOT NULL, personalEmail VARCHAR(40), directDepositNumber CHAR(21), ssn CHAR(9) NOT NULL, PRIMARY KEY(employeeID));
+CREATE TABLE IF NOT EXISTS employee(employeeID CHAR(6) NOT NULL, password VARCHAR(32) NOT NULL, empType CHAR(3) NOT NULL, teamID CHAR(4), managerID CHAR(6), fName VARCHAR(20) NOT NULL, lName VARCHAR(20) NOT NULL, salary INT NOT NULL, position VARCHAR(40) NOT NULL, startDate DATE NOT NULL, birthDate DATE, sickDaysYearly SMALLINT NOT NULL, sickDaysRemaining SMALLINT, vacationDaysYearly SMALLINT NOT NULL, vacationDaysRemaining SMALLINT, address VARCHAR(50), phoneNumber VARCHAR(10), workEmail VARCHAR(40) NOT NULL, personalEmail VARCHAR(40), directDepositNumber CHAR(21), ssn CHAR(9) NOT NULL, PRIMARY KEY(employeeID));
 
-
-CREATE TABLE IF NOT EXISTS teamManaged(managerID CHAR(6) NOT NULL, teamID CHAR(6) NOT NULL, PRIMARY KEY(managerID, teamID));
+CREATE TABLE IF NOT EXISTS teamManaged(managerID CHAR(6) NOT NULL, teamID CHAR(4) NOT NULL, PRIMARY KEY(managerID, teamID));
 
 CREATE TABLE IF NOT EXISTS empManaged(managerID CHAR(6) NOT NULL, employeeID CHAR(6) NOT NULL, PRIMARY KEY(managerID, employeeID));
 
