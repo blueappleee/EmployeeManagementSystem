@@ -1,5 +1,6 @@
 from db import dbConnection
 from Data_Objects.Project import Project
+from Data_Objects.HoursWorked import TeamHoursWorked
 from Data_Objects.Employee import Employee
 from Data_Objects.Manager import Manager
 import sys
@@ -22,13 +23,17 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            cur.execute("UPDATE hoursWorked SET hourAmount = '%(1)s', workDate = '%(2)s', hourType = '%(3)s' WHERE employeeID = '%(4)s';" % {"1": workHours, "2": workDate, "3": hourType, "4": teamEmployeeId})
+            cur.execute("UPDATE hoursWorked SET hourAmount = '%(1)s' WHERE  workDate = '%(2)s' AND hourType = '%(3)s' AND employeeID = '%(4)s';" % {"1": workHours, "2": workDate, "3": hourType, "4": teamEmployeeId})
             dbConnection.connection.commit()
+            posResult = cur.rowcount
         except mysql.connector.Error as error:
             print(error)
-            sys.exit(1)
-
-        print("The system has updated the correct working hours for employee (" + teamEmployeeId + ").")
+            return error
+            
+        if posResult==0:
+            return 2
+        else:
+            return 0
 
     """
     Get summary stats on team's employees
@@ -46,7 +51,7 @@ class ManagerPersistenceService:
             for row in records:
                 employeeID = row[1]
                 cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s';" % {"1": employeeID})
-                employeeInfo = cur.fetchall()
+                employeeInfo = cur.fetchall()[0]
 
                 employeeInstance = Employee(employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5],
                                             employeeInfo[6], employeeInfo[7], employeeInfo[8], employeeInfo[9], employeeInfo[10], employeeInfo[11],
@@ -70,20 +75,20 @@ class ManagerPersistenceService:
 
         try:
             # TODO wait for testing the sql query
-            cur.execute("SELECT project.projectID, project.projectName, project.currentTeamID, project.projectStatus FROM project, team, employee WHERE team.teamID = project.currentTeamID AND team.teamID = employee.teamID AND employee.employeeID = '%(1)s' AND employee.teamID = '%(2)s';" % {"1": teamEmployeeID, "2": teamID})
+            cur.execute("SELECT * FROM hoursWorked WHERE employeeID= '%(1)s';" % {"1": teamEmployeeID})
 
             records = cur.fetchall()
-            projectList = []
+            workList = []
             for row in records:
-                projectInstance = Project(row[0], row[1], row[2], row[3])
+                workInstance = TeamHoursWorked(row[0], row[1], row[2], row[3])
 
-                projectList.append(projectInstance)
+                workList.append(workInstance)
 
         except mysql.connector.Error as error:
             print(error)
-            sys.exit(1)
+            return 1
 
-        return projectList
+        return workList
 
     """
     Assign Employee to team
@@ -108,7 +113,7 @@ class ManagerPersistenceService:
             print(error)
             sys.exit(1)
 
-        print("The employee (" + teamEmployeeId + ") has been added to the team (" + teamID + "), which managed by the Manager (" + managerId + ").")
+        return 0
 
     """
     Remove Employee from team
@@ -120,14 +125,15 @@ class ManagerPersistenceService:
         try:
             cur.execute("DELETE FROM teamMembers WHERE teamID = '%(1)s' AND employeeID = '%(2)s';" % {"1": teamID, "2": teamEmployeeId})
             dbConnection.connection.commit()
+            result=cur.rowcount
             cur.execute("UPDATE employee SET teamID = NULL WHERE employeeID = '%(1)s';" % {"1": teamEmployeeId})
             dbConnection.connection.commit()
 
         except mysql.connector.Error as error:
             print(error)
-            sys.exit(1)
+            return 111
 
-        print("The employee (" + teamEmployeeId + ") has been successfully removed from the team (" + teamID + ").")
+        return result
 
     """
     Assign Team to Project
@@ -137,6 +143,9 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
+            cur.execute("UPDATE project SET currentTeamID=NULL WHERE currentTeamID = '%(2)s';" % {"1": teamId})
+            dbConnection.connection.commit()
+        
             # update the project information to the Team table
             cur.execute("UPDATE team SET projectID = '%(1)s' WHERE teamID = '%(2)s';" % {"1": projectId, "2": teamId})
             dbConnection.connection.commit()
@@ -147,9 +156,9 @@ class ManagerPersistenceService:
 
         except mysql.connector.Error as error:
             print(error)
-            sys.exit(1)
+            return error
 
-        print("The team has been successfully assigned to a project.")
+        return 0
 
     """
     Get project details
@@ -161,7 +170,7 @@ class ManagerPersistenceService:
         try:
             cur.execute("SELECT * FROM project WHERE projectID = '%(1)s';" % {"1": projectID})
             record = cur.fetchone()
-            print("Total number of rows in table", cur.rowcount)
+            #print("Total number of rows in table", cur.rowcount)
 
             projectInstance = Project(record[0], record[1], record[2], record[3])
 
