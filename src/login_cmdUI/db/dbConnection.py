@@ -5,8 +5,8 @@ def connectTo_DB():
     #try:
     connection = mysql.connector.connect(host='localhost',
                                              database='empManagementdb',
-                                             user='root',
-                                             password='Fox1230@')
+                                             user='empManagement',
+                                             password='cs4471pass')
         #if connection.is_connected():
         #    db_Info = connection.get_server_info()
          #   print("Connected to MySQL Server version ", db_Info)
