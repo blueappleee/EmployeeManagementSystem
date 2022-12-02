@@ -1,5 +1,6 @@
 import  sys, pyfiglet, signal,os,hashlib
-from Business_Logic import EmployeeController as ec
+sys.path.append('../src')
+import Business_Logic.EmployeeController as ec
 from UI_factory import UI_generator
 from getpass import getpass
 

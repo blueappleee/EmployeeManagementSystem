@@ -1,7 +1,9 @@
+import sys
+sys.path.append('../src')
 from generalUI import employeeUI
 from generalUI import input_shoe_be_num
 from Business_Logic.AdminController import AdminController
-from Data_Objects import Employee
+from Data_Objects.Employee import Employee
 
 class adminUI(employeeUI):
     def __init__(self, uid):
