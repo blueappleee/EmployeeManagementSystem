@@ -54,8 +54,7 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         if len(everything) != 19:
             print("Wrong number of attribute, make sure to write (, ,) for a null input")
             return
-        pwd = hashlib.md5(result[1].encode()).hexdigest()
-        msg = AdminController.registerNewEmployee(Employee(result[0],hashlib.md5(result[1].encode()).hexdigest() , result[2], None, None, result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15], result[16], result[17], result[18]))
+        msg = AdminController.registerNewEmployee(Employee(result[0], hashlib.md5(result[1]).hexdigest(), result[2], None, None, result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15], result[16], result[17], result[18]))
         print(msg)
 
     """

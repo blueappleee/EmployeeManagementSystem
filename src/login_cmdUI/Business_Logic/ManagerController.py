@@ -4,6 +4,7 @@ from Data_Objects.Manager import Manager
 from Data_Objects.Project import Project
 from Persistence.ManagerPersistenceService import ManagerPersistenceService
 from Business_Logic.EmployeeController import EmployeeController
+from tabulate import tabulate
 
 
 def validateDate(date):
