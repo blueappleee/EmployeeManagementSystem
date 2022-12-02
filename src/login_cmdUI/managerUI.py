@@ -19,7 +19,7 @@ class managerUI(employeeUI):
     """
     def assign_team(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id, self.dataobject.teamId) #this line need further detail for dataobject INFO
+        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id, self.dataobject.teamId)
         if msg == None:
             print(f'Assigned employee {employeeID} to your team successfully!')
             return
