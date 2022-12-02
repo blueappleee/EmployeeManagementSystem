@@ -31,9 +31,10 @@ sudo mysql -nvvf --verbose -p${MYSQLPASS} < setupScript.sql > setupOutput.txt 2>
 sudo mysql -nvvf --verbose -p${MYSQLPASS} < dummyValues.sql > dummyOutput.txt 2>&1
 
 
-sudo mkdir ~/cs4471program
-sudo cd ~/cs4471program
-git clone "https://github.com/blueappleee/EmployeeManagementSystem"
+mkdir /home/vboxuser/cs4471program
+mkdir /home/vboxuser/cs4471program/EMS
+git clone "https://github.com/blueappleee/EmployeeManagementSystem" /home/vboxuser/cs4471program/EMS
+sudo chown -R vboxuser /home/vboxuser/cs4471program/
 # this sed can be used if the empManagementPass changes from cs4471 to replace the connector pass in the file
 #sed -i "/connection = mysql.connector.connect(host='localhost',database='empManagementdb',user='empManagement',password='cs4471pass')/c\connection = mysql.connector.connect(host='localhost',database='empManagementdb',user='empManagement',password='${EMPMANAGEMENTPASS}')" ~/cs4471program/EmployeeManagementSystem/src/login_cmdUI/db/dbConnection.py
 
