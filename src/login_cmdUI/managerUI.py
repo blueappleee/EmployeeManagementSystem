@@ -46,11 +46,9 @@ class managerUI(employeeUI):
         hours = input("Enter the corrected hours: ")
         hours = input_shoe_be_num(hours,'hours')
         date = input("Enter the date(YYYY-MM-DD) you wanna correct: ")
-        date = isdate(date,'date')
-        while date!= True:#check valid date format
+        while isdate(date,'date')!= True:#check valid date format
             print(date)
-            workDate = input("Enter a valid date(YYYY-MM-DD): ")
-            date = isdate(workDate,'work date')
+            date = input("Enter a valid date(YYYY-MM-DD): ")
         msg = ManagerController.correctTeamEmployeeWorkHours(empID, worktype, hours, date)
         if msg == None:
             print(f'Corrected work hours for employee{empID} on {date} successfully!')

@@ -1,7 +1,9 @@
 import datetime
 
 from Data_Objects.Manager import Manager
+from Data_Objects.Manager import Employee
 from Data_Objects.Project import Project
+from Data_Objects.HoursWorked import TeamHoursWorked
 from Persistence.ManagerPersistenceService import ManagerPersistenceService
 from Business_Logic.EmployeeController import EmployeeController
 from tabulate import tabulate
@@ -46,7 +48,13 @@ class ManagerController:
     def correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate):
         if len(teamEmployeeId) == 6:
             if EmployeeController.istime(workHours, 'work hours'):
-                ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate)
+                result=ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate)
+                if result==0:
+                    return None
+                elif result==1:
+                    return f'An error occurred assigning the employee to the team'
+                else:
+                    return f'Work Entry not found'
             else:
                 return f'The input work hours is not an integer.'
         else:
@@ -62,7 +70,13 @@ class ManagerController:
             if employeeList is None or len(employeeList) == 0:
                 return f'There is no employee in such team currently.'
             else:
-                return employeeList
+                retstr ="The team contains employees: "
+                for i in range(len(employeeList)):
+                    emp=employeeList[i]
+                    retstr=retstr+emp.employeeId + " Name: " + emp.fName + " " + emp.lName + " in position: " + emp.position
+                    if  i != len(employeeList) - 1:
+                        retstr=retstr+" and also "
+                return retstr
         else:
             return f'The input teamId does not match the length requirement.'
 
@@ -72,11 +86,19 @@ class ManagerController:
     @staticmethod
     def getTeamEmployeeWorkData(teamID, teamEmployeeID):
         if len(teamID) == 4:
-            projectList = ManagerPersistenceService.getTeamEmployeeWorkData(teamID, teamEmployeeID)
-            if projectList is None or len(projectList) == 0:
-                return f'The employee does not have any project yet.'
+            hourList = ManagerPersistenceService.getTeamEmployeeWorkData(teamID, teamEmployeeID)
+            if hourList is None or (type(hourList) == "List" and len(hourList) == 0):
+                return f'The employee does not have any work yet.'
+            elif type(hourList) != "List" and hourList == 1:
+                return f'An error occurred getting the employee.'
             else:
-                return projectList
+                retstr ="The employee has worked: "
+                for i in range(len(hourList)):
+                    hour=hourList[i]
+                    retstr=retstr+ str(hour.hourAmount) + "hours on Date: " + str(hour.workDate) + " of type " + str(hour.hourType) + " " 
+                    if  i != len(hourList) - 1:
+                        retstr=retstr+" and also "
+                return retstr
         else:
             return f'The input teamId does not match the length requirement.'
 
@@ -88,7 +110,11 @@ class ManagerController:
         if len(teamEmployeeId) == 6:
             if len(managerId) == 6:
                 if len(teamID) == 4:
-                    ManagerPersistenceService.assignEmployeeToTeam(teamEmployeeId, managerId, teamID)
+                    result= ManagerPersistenceService.assignEmployeeToTeam(teamEmployeeId, managerId, teamID)
+                    if result==0:
+                    	return None
+                    else:
+                        return f'An error occurred assigning the employee to the team'
                 else:
                     return f'The input teamID does not match length requirement.'
             else:
@@ -103,7 +129,13 @@ class ManagerController:
     def removeEmployeeFromTeam(teamID, teamEmployeeId):
         if len(teamID) == 4:
             if len(teamEmployeeId) == 6:
-                ManagerPersistenceService.removeEmployeeFromTeam(teamID, teamEmployeeId)
+                result=ManagerPersistenceService.removeEmployeeFromTeam(teamID, teamEmployeeId)
+                if result==111:
+                    return f'An error occurred removing the employee'
+                elif result==0:
+                    return f"The employee isn't in that team"
+                else:
+                    return None
             else:
                 return f'The input employeeID does not match length requirement.'
         else:
@@ -116,7 +148,11 @@ class ManagerController:
     def assignTeamProject(projectId, teamId):
         if len(projectId) == 8:
             if len(teamId) == 4:
-                ManagerPersistenceService.assignTeamProject(projectId, teamId)
+                result = ManagerPersistenceService.assignTeamProject(projectId, teamId)
+                if result==0:
+                    return None
+                else:
+                    return f'An error occurred assigning the employee to the team'
             else:
                 return f'The input teamID does not match length requirement.'
         else:
