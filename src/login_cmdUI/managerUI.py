@@ -19,20 +19,19 @@ class managerUI(employeeUI):
     """
     def assign_team(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id) #this line need further detail for dataobject INFO
+        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id, self.dataobject.teamId) #this line need further detail for dataobject INFO
         if msg == None:
-            print(f'Assign employee {employeeID} to your team success!')
+            print(f'Assigned employee {employeeID} to your team successfully!')
             return
         print(msg)
     """
     Assign Team to Project
     """
     def assign_project(self,projectID):
-        team = input_shoe_be_num(team,'teamID')
-        projectID = input("enter the project id you wanna assign: ")
-        msg = ManagerController.assignTeamProject(projectID,team)
+        projectID = input_shoe_be_num(projectID, 'projectID')
+        msg = ManagerController.assignTeamProject(projectID, self.dataobject.teamId)
         if msg == None:
-            print(f'Assign project {projectID} to your team success!')
+            print(f'Assigned project {projectID} to your team successfully!')
             return
         print(msg)
     """
@@ -40,6 +39,7 @@ class managerUI(employeeUI):
     """
     def correct_hours(self,empID):
         empID = input_shoe_be_num(empID, 'employeeID')
+        while(worktype == ' '): worktype = input("Please enter a work type: ")
         hours = input("Enter the correct hours: ")
         hours = input_shoe_be_num(hours,'hours')
         date = input("Enter the date(YYYY-MM-DD) you wanna correct")
@@ -48,18 +48,17 @@ class managerUI(employeeUI):
             print(date)
             workDate = input("Enter a valid date(YYYY-MM-DD): ")
             date = isdate(workDate,'work date')
-        msg = ManagerController.correctTeamEmployeeWorkHours(hours)
+        msg = ManagerController.correctTeamEmployeeWorkHours(empID, worktype, hours, date)
         if msg == None:
-            print(f'Correct work hour for employee{empID} on {date} success!')
+            print(f'Corrected work hours for employee{empID} on {date} successfully!')
             return
         print(msg)
         
     """
     Get summary stats on team's employees
     """
-    def teamEmployeesSummary(self,team):
-        team = input_shoe_be_num(team,'teamID')
-        emplist = ManagerController.getSummaryTeamEmployeeData(team)
+    def teamEmployeesSummary(self, nonValue):
+        emplist = ManagerController.getSummaryTeamEmployeeData(self.dataobject.teamId)
         if isinstance(emplist, str):
             print(emplist)
             return
@@ -71,7 +70,7 @@ class managerUI(employeeUI):
     """
     def employeeWorkdata(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        datalist = ManagerController.getTeamEmployeeWorkData(employeeID)
+        datalist = ManagerController.getTeamEmployeeWorkData(self.dataobject.teamId, employeeID)
         if isinstance(datalist, str):
             print(datalist)
             return
@@ -91,9 +90,9 @@ class managerUI(employeeUI):
     """
     def removeEmployee(self,employeeID):
         employeeID = input_shoe_be_num(employeeID,'employeeID')
-        msg = ManagerController.removeEmployeeFromTeam(employeeID)
+        msg = ManagerController.removeEmployeeFromTeam(self.dataobject.teamId, employeeID)
         if msg == None:
-            print(f'remove employee{employeeID} from your team success!')
+            print(f'Removed employee{employeeID} from your team successfully!')
             return
         print(msg)
     def welcome(self,name):
@@ -103,7 +102,7 @@ class managerUI(employeeUI):
 update      *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info
 report      *worktype = [something not sure]    To log your working hours
 assigne     #employeeID                         To assign an employee to your team
-assignt     #projectID                          To assign toyr team to a project
+assignt     #projectID                          To assign your team to a project
 correct     #hours                              To correct the work hours for your team
 teamsum                                         To get the working Info summary of your team
 workdata    #employeeID                         To get working Info summary of the employee
