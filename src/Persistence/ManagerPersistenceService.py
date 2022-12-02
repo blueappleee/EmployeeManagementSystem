@@ -124,7 +124,7 @@ class ManagerPersistenceService:
         try:
             cur.execute("DELETE FROM teamMembers WHERE teamID = '%(1)s' AND employeeID = '%(2)s';" % {"1": teamID, "2": teamEmployeeId})
             dbConnection.connection.commit()
-            cur.execute("UPDATE employee SET teamID = 'NULL' WHERE employeeID = '%(1)s';" % {"1": teamEmployeeId})
+            cur.execute("UPDATE employee SET teamID = NULL WHERE employeeID = '%(1)s';" % {"1": teamEmployeeId})
             dbConnection.connection.commit()
 
         except mysql.connector.Error as error:
