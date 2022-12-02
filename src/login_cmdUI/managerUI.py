@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../src')
 from generalUI import employeeUI
 from generalUI import input_shoe_be_num,isdate
 from Business_Logic.ManagerController import ManagerController

@@ -52,7 +52,7 @@ class EmployeeController:
             return f'Error: wrong attribute({type}) format. Should be YYYY-MM-DD with valid date'
     @staticmethod
     def istime(input,type):
-        if input < 24 and input > 0: return True
+        if int(input) < 24 and int(input) > 0: return True
         return f'Error: wrong attribute({type}) format. Should be a number within (0,24).'
 
     """
@@ -77,7 +77,7 @@ class EmployeeController:
         else:#only restrict length
             if len(getattr(employee, changed)) > rule_of_changed:
                 return f'Illegal input, input length must be no more than {rule_of_changed}.'
-        #EmployeePersistenceService.updateEmployeeInformation(employee)
+        EmployeePersistenceService.updateEmployeeInformation(employee)
         return f'Success! attribute {changed} has been modified!'
 
     """
@@ -87,13 +87,14 @@ class EmployeeController:
     def logWorkHours(employee: Employee, workType, workTime, workDate):
         if workType not in ['W','S','V']:#valid type
             return f'Sorry, valid work type includes: w, s, v.'
-        msg = EmployeeController.istime('work type', workTime)
+        msg = EmployeeController.istime(workTime, 'work type')
         if msg != True:#valid time
             return msg
-        msg = EmployeeController.isdate('work date', workDate)
+        msg = EmployeeController.isdate(workDate, 'work date')
         if msg != True:#valid date
             return msg
-        EmployeePersistenceService.logWorkHours(employee, workType, workTime)
+        EmployeePersistenceService.logWorkHours(employee, workType, workTime, workDate)
+        return f'Success! work has been reported!'
 
     """
     Get Employee by Id
