@@ -31,9 +31,9 @@ sudo mysql -nvvf --verbose -p${MYSQLPASS} < setupScript.sql > setupOutput.txt 2>
 sudo mysql -nvvf --verbose -p${MYSQLPASS} < dummyValues.sql > dummyOutput.txt 2>&1
 
 
-sudo mkdir ~/program
-sudo cd ~/program
+sudo mkdir ~/cs4471program
+sudo cd ~/cs4471program
 git clone "https://github.com/blueappleee/EmployeeManagementSystem"
-# this sed line will need to repalce var = and something.py so it enters the set password into the python code
-#sed -i "/var = mysql.connector.connect(host='localhost',user='test',password='password')/c\var = mysql.connector.connect(host='localhost',user='test',password='${EMPMANAGEMENTPASS')" something.py
+# this sed can be used if the empManagementPass changes from cs4471 to replace the connector pass in the file
+#sed -i "/connection = mysql.connector.connect(host='localhost',database='empManagementdb',user='empManagement',password='cs4471pass')/c\connection = mysql.connector.connect(host='localhost',database='empManagementdb',user='empManagement',password='${EMPMANAGEMENTPASS}')" ~/cs4471program/EmployeeManagementSystem/src/login_cmdUI/db/dbConnection.py
 
