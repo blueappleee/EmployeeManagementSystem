@@ -1,6 +1,5 @@
 import  sys, pyfiglet, signal,os,hashlib
-sys.path.append('../src')
-import Business_Logic.EmployeeController as ec
+from Business_Logic import EmployeeController as ec
 from UI_factory import UI_generator
 from getpass import getpass
 
@@ -24,10 +23,9 @@ def main():
     print(ascii_banner)
     uid, pwd = login_session()
     employee  = ec.EmployeeController.getEmployeeById(uid)
-    while str(employee.password) != pwd:
+    while employee == None or str(employee.password) != pwd:
         print('Invalid UserID or Password, Please try again.')
         uid, pwd = login_session()
-        pwd = ''
         employee  = ec.EmployeeController.getEmployeeById(uid)
     os.system('cls' if os.name == 'nt' else 'clear')
     """
