@@ -27,7 +27,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         print("The system has updated the correct working hours for employee (" + teamEmployeeId + ").")
 
@@ -59,7 +58,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         return employeeList
 
@@ -84,7 +82,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         return projectList
 
@@ -110,7 +107,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         print("The employee (" + teamEmployeeId + ") has been added to the team (" + teamID + "), which managed by the Manager (" + managerId + ").")
 
@@ -130,7 +126,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         print("The employee (" + teamEmployeeId + ") has been successfully removed from the team (" + teamID + ").")
 
@@ -153,7 +148,6 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         print("The team has been successfully assigned to a project.")
 
@@ -166,7 +160,7 @@ class ManagerPersistenceService:
 
         try:
             cur.execute("SELECT * FROM project WHERE projectID = '%(1)s';" % {"1": projectID})
-            record = cur.fetchall()
+            record = cur.fetchone()
             print("Total number of rows in table", cur.rowcount)
 
             projectInstance = Project(record[0], record[1], record[2], record[3])
@@ -174,13 +168,12 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         return projectInstance
 
     """
-        search the manager by id
-        """
+    Search the manager by id
+    """
     @staticmethod
     def searchManagerByID(managerID) -> Manager:
         cur = dbConnection.connection.cursor()
@@ -188,7 +181,7 @@ class ManagerPersistenceService:
         try:
             # cur.execute("SELECT employeeId, empType, teamId, managerId, fName, lName, salary, position, phoneNumber, workEmail FROM employee WHERE employeeID = '%(1)s' AND empType = mng;" % {"1": managerID})
             cur.execute("SELECT * FROM employee WHERE employeeID = '%(1)s';" % {"1": managerID})
-            record = cur.fetchall()
+            record = cur.fetchone()
             # print("Total number of rows in table", cur.rowcount)
 
             managerInstance = Manager(record[0], record[1], record[2], record[3], record[4], record[5], record[6],
@@ -198,6 +191,5 @@ class ManagerPersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
-        dbConnection.connection.close()
 
         return managerInstance

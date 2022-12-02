@@ -28,22 +28,24 @@ class ManagerController:
         # managerInstance = Manager()
         if len(managerId) == 6:
             managerInstance = ManagerPersistenceService.searchManagerByID(managerId)
-            if managerInstance.isNull():
+            if managerInstance is None:
                 return f'There is no such Manager in our system.'
             else:
                 return managerInstance
                 # headers = ["employeeId", "empType", "teamId", "managerId", "fName", "lName", "salary", "position", "phoneNumber", "workEmail"]
                 # print(tabulate(managerInstance, headers, tablefmt="grid"))
+        else:
+            return f'The input managerId does not match the length requirement.'
 
     """
     Logic to correct a team employee's work hours
     """
     @staticmethod
-    def correctTeamEmployeeWorkHours(teamEmployeeId, workHours, workDate):
+    def correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate):
         if len(teamEmployeeId) == 6:
             if isinstance(workHours, int):
                 if validateDate(workDate):
-                    ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, workHours, workDate)
+                    ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate)
             else:
                 return f'The input work hours is not an integer.'
         else:
@@ -56,10 +58,12 @@ class ManagerController:
     def getSummaryTeamEmployeeData(teamId):
         if len(teamId) == 4:
             employeeList = ManagerPersistenceService.getSummaryTeamEmployeeData(teamId)
-            if employeeList is None:
+            if employeeList is None or len(employeeList) == 0:
                 return f'There is no employee in such team currently.'
             else:
                 return employeeList
+        else:
+            return f'The input teamId does not match the length requirement.'
 
     """
     Get Specific Team Employee's work related data
@@ -68,10 +72,12 @@ class ManagerController:
     def getTeamEmployeeWorkData(teamID, teamEmployeeID):
         if len(teamID) == 4:
             projectList = ManagerPersistenceService.getTeamEmployeeWorkData(teamID, teamEmployeeID)
-            if projectList is None:
+            if projectList is None or len(projectList) == 0:
                 return f'The employee does not have any project yet.'
             else:
                 return projectList
+        else:
+            return f'The input teamId does not match the length requirement.'
 
     """
     Assign Employee to team
@@ -121,10 +127,10 @@ class ManagerController:
     @staticmethod
     def getProjectDetails(projectId):
         if len(projectId) == 8:
-            projectInsatnce = ManagerPersistenceService.getProjectDetails(projectId)
-            if projectInsatnce is None:
+            projectInstance = ManagerPersistenceService.getProjectDetails(projectId)
+            if projectInstance is None:
                 return f'The project does not exist in our system.'
             else:
-                return projectInsatnce
+                return projectInstance
         else:
             return f'The input projectID does not match length requirement.'
