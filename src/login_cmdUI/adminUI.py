@@ -112,7 +112,7 @@ registere                                       To add a new employee to the sys
 registert                                       To add a new team to the system
 registerp                                       To add a new project to the system
 inactive    #employeeID                         To make an employee account inactive
-assign                       			To assign manager to a team
+assign                       			        To assign manager to a team
 Type exit to logout
 When type your command, Words start with * must be replaced by one of the keywords in []
 Words start with # must be replaced by a valid number""")

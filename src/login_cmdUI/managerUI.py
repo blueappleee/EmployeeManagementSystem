@@ -1,6 +1,8 @@
 from generalUI import employeeUI
 from generalUI import input_shoe_be_num,isdate
 from Business_Logic.ManagerController import ManagerController
+from Data_Objects.Project import Project
+from Data_Objects.Team import Team
 
 class managerUI(employeeUI):
     def __init__(self, uid):
@@ -18,7 +20,9 @@ class managerUI(employeeUI):
     Assign Employee to team
     """
     def assign_team(self,employeeID):
-        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id, self.dataobject.teamId)
+        employeeID = input_shoe_be_num(employeeID,'emlpoyee ID')
+        employeeID =str(employeeID)
+        msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.employeeId, self.dataobject.teamId)
         if msg == None:
             print(f'Assigned employee {employeeID} to your team successfully!')
             return
@@ -36,11 +40,13 @@ class managerUI(employeeUI):
     correct a team employee's work hours
     """
     def correct_hours(self,empID):
-        while(worktype == ' '): worktype = input("Please enter a work type: ")
-        hours = input("Enter the correct hours: ")
+        empID = input_shoe_be_num(empID,'Employee ID')
+        worktype = input("enter a work type(W/S/V): ")
+        while(worktype not in ['W','S','V']): worktype = input("Please enter valid work type: ")
+        hours = input("Enter the corrected hours: ")
         hours = input_shoe_be_num(hours,'hours')
-        date = input("Enter the date(YYYY-MM-DD) you wanna correct")
-        date = isdate(date)
+        date = input("Enter the date(YYYY-MM-DD) you wanna correct: ")
+        date = isdate(date,'date')
         while date!= True:#check valid date format
             print(date)
             workDate = input("Enter a valid date(YYYY-MM-DD): ")
@@ -78,7 +84,7 @@ class managerUI(employeeUI):
     """
     def projectDetails(self,project):
         p = ManagerController.getProjectDetails(project)
-        print(p)
+        print(f'Porject {p.name} is assigned to team {p.currentTeamId}, and now it\'s in the process of {p.status}')
         
     """
     Remove Employee from team
@@ -99,7 +105,7 @@ update      *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To
 report      *worktype = [something not sure]    To log your working hours
 assigne     #employeeID                         To assign an employee to your team
 assignt     #projectID                          To assign your team to a project
-correct     #hours                              To correct the work hours for your team
+correct     #empID                              To correct the work hours for your team
 teamsum                                         To get the working Info summary of your team
 workdata    #employeeID                         To get working Info summary of the employee
 project     #projectID                          To get the project details

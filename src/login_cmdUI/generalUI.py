@@ -5,7 +5,7 @@ from Business_Logic import EmployeeController as ec
 def input_shoe_be_num(string,type) -> int:
     while not string.isnumeric():
         string = input(f"enter an valid number for ({type}): ")
-    return int(string)
+    return string
 
 def isdate(input,type):
         try:

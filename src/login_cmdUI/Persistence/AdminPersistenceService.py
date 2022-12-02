@@ -3,7 +3,7 @@ from Data_Objects.SysAdmin import SysAdmin
 from Data_Objects.Team import Team
 from Data_Objects.Project import Project
 from db import dbConnection
-import mysql.connector
+import mysql.connector, sys
 
 
 """

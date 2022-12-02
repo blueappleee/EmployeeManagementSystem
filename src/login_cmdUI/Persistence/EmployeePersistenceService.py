@@ -1,6 +1,6 @@
 from Data_Objects.Employee import Employee
 from db import dbConnection
-import mysql.connector
+import mysql.connector, sys
 
 """
 Employee Persistence Service receives calls from Employee Controller and interacts with the database
@@ -39,6 +39,8 @@ class EmployeePersistenceService:
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
+        except Exception:
+            return
         #dbConnection.connection.close()
         
         return employee

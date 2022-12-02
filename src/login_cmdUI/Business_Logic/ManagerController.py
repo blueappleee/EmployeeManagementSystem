@@ -1,13 +1,15 @@
 import datetime
 
 from Data_Objects.Manager import Manager
-from Persistence import ManagerPersistenceService
+from Data_Objects.Project import Project
+from Persistence.ManagerPersistenceService import ManagerPersistenceService
+from Business_Logic.EmployeeController import EmployeeController
 from tabulate import tabulate
 
 
 def validateDate(date):
     try:
-        datetime.datetime.striptime(date, '%Y-%m-%d')
+        datetime.datetime.strptime(date, '%Y-%m-%d')
         return True
     except ValueError:
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
@@ -43,9 +45,8 @@ class ManagerController:
     @staticmethod
     def correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate):
         if len(teamEmployeeId) == 6:
-            if isinstance(workHours, int):
-                if validateDate(workDate):
-                    ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate)
+            if EmployeeController.istime(workHours, 'work hours'):
+                ManagerPersistenceService.correctTeamEmployeeWorkHours(teamEmployeeId, hourType, workHours, workDate)
             else:
                 return f'The input work hours is not an integer.'
         else:
@@ -125,7 +126,7 @@ class ManagerController:
     Get project details
     """
     @staticmethod
-    def getProjectDetails(projectId):
+    def getProjectDetails(projectId) -> Project:
         if len(projectId) == 8:
             projectInstance = ManagerPersistenceService.getProjectDetails(projectId)
             if projectInstance is None:
