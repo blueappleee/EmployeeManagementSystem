@@ -18,7 +18,6 @@ class managerUI(employeeUI):
     Assign Employee to team
     """
     def assign_team(self,employeeID):
-        employeeID = input_shoe_be_num(employeeID,'employeeID')
         msg = ManagerController.assignEmployeeToTeam(employeeID,self.dataobject.id, self.dataobject.teamId)
         if msg == None:
             print(f'Assigned employee {employeeID} to your team successfully!')
@@ -28,7 +27,6 @@ class managerUI(employeeUI):
     Assign Team to Project
     """
     def assign_project(self,projectID):
-        projectID = input_shoe_be_num(projectID, 'projectID')
         msg = ManagerController.assignTeamProject(projectID, self.dataobject.teamId)
         if msg == None:
             print(f'Assigned project {projectID} to your team successfully!')
@@ -38,7 +36,6 @@ class managerUI(employeeUI):
     correct a team employee's work hours
     """
     def correct_hours(self,empID):
-        empID = input_shoe_be_num(empID, 'employeeID')
         while(worktype == ' '): worktype = input("Please enter a work type: ")
         hours = input("Enter the correct hours: ")
         hours = input_shoe_be_num(hours,'hours')
@@ -69,7 +66,6 @@ class managerUI(employeeUI):
     Get Specific Team Employee's work related data
     """
     def employeeWorkdata(self,employeeID):
-        employeeID = input_shoe_be_num(employeeID,'employeeID')
         datalist = ManagerController.getTeamEmployeeWorkData(self.dataobject.teamId, employeeID)
         if isinstance(datalist, str):
             print(datalist)
@@ -81,7 +77,6 @@ class managerUI(employeeUI):
     Get project details
     """
     def projectDetails(self,project):
-        project  = input_shoe_be_num(project,'projectID')
         p = ManagerController.getProjectDetails(project)
         print(p)
         
@@ -89,12 +84,13 @@ class managerUI(employeeUI):
     Remove Employee from team
     """
     def removeEmployee(self,employeeID):
-        employeeID = input_shoe_be_num(employeeID,'employeeID')
         msg = ManagerController.removeEmployeeFromTeam(self.dataobject.teamId, employeeID)
         if msg == None:
             print(f'Removed employee{employeeID} from your team successfully!')
             return
         print(msg)
+        
+
     def welcome(self,name):
         print(f'Hi, Manager {name}. Welcome!')
         print(

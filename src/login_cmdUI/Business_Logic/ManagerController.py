@@ -34,6 +34,8 @@ class ManagerController:
                 return managerInstance
                 # headers = ["employeeId", "empType", "teamId", "managerId", "fName", "lName", "salary", "position", "phoneNumber", "workEmail"]
                 # print(tabulate(managerInstance, headers, tablefmt="grid"))
+        else:
+            return f'The input managerId does not match the length requirement.'
 
     """
     Logic to correct a team employee's work hours
@@ -60,6 +62,8 @@ class ManagerController:
                 return f'There is no employee in such team currently.'
             else:
                 return employeeList
+        else:
+            return f'The input teamId does not match the length requirement.'
 
     """
     Get Specific Team Employee's work related data
@@ -72,6 +76,8 @@ class ManagerController:
                 return f'The employee does not have any project yet.'
             else:
                 return projectList
+        else:
+            return f'The input teamId does not match the length requirement.'
 
     """
     Assign Employee to team
