@@ -106,7 +106,7 @@ sickDaysYearly, sickDaysRemaining, vacationDaysYearly, vacationDaysRemaining, ad
         print(
 """You are loging in with SysAdmin priviliges, you can enter:
 update      *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info
-report      *worktype = [something not sure]    To log your working hours
+report      *worktype = [W/S/V]                 To log your working hours
 role        #employeeID                         To change the system access level for the employee
 registere                                       To add a new employee to the system
 registert                                       To add a new team to the system

@@ -97,6 +97,6 @@ class employeeUI(general_UI):
         print(
 """You are loging in with regular employee priviliges, you can enter:
 update  *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info with specific attributes
-report  *worktype = [something not sure]    To log your working hours with specific work type
+report      *worktype = [W/S/V]                 To log your working hours
 When type your command, Words start with * must be replaced by one of the keywords in []
 Type exit to logout""")

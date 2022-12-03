@@ -86,7 +86,7 @@ class EmployeeController:
     @staticmethod
     def logWorkHours(employee: Employee, workType, workTime, workDate):
         if workType not in ['W','S','V']:#valid type
-            return f'Sorry, valid work type includes: w, s, v.'
+            return f'Sorry, valid work type includes: W, S, V.'
         msg = EmployeeController.istime(workTime, 'work type')
         if msg != True:#valid time
             return msg

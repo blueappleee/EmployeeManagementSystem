@@ -31,6 +31,7 @@ class managerUI(employeeUI):
     Assign Team to Project
     """
     def assign_project(self,projectID):
+        projectID = input_shoe_be_num(projectID,'Project ID')
         msg = ManagerController.assignTeamProject(projectID, self.dataobject.teamId)
         if msg == None:
             print(f'Assigned project {projectID} to your team successfully!')
@@ -82,6 +83,9 @@ class managerUI(employeeUI):
     """
     def projectDetails(self,project):
         p = ManagerController.getProjectDetails(project)
+        if isinstance(p, str):
+            print(p)
+            return
         print(f'Porject {p.name} is assigned to team {p.currentTeamId}, and now it\'s in the process of {p.status}')
         
     """
@@ -100,7 +104,7 @@ class managerUI(employeeUI):
         print(
 """You are loging in with manager priviliges, you can enter:
 update      *attributes = [fName/lName/birthDate/phoneNumber/personalEmail]   To update your personal Info
-report      *worktype = [something not sure]    To log your working hours
+report      *worktype = [W/S/V]                 To log your working hours
 assigne     #employeeID                         To assign an employee to your team
 assignt     #projectID                          To assign your team to a project
 correct     #empID                              To correct the work hours for your team
