@@ -143,7 +143,7 @@ class ManagerPersistenceService:
         cur = dbConnection.connection.cursor()
 
         try:
-            cur.execute("UPDATE project SET currentTeamID=NULL WHERE currentTeamID = '%(2)s';" % {"1": teamId})
+            cur.execute("UPDATE project SET currentTeamID=NULL WHERE currentTeamID = '%(1)s';" % {"1": teamId})
             dbConnection.connection.commit()
         
             # update the project information to the Team table
@@ -173,12 +173,14 @@ class ManagerPersistenceService:
             #print("Total number of rows in table", cur.rowcount)
 
             projectInstance = Project(record[0], record[1], record[2], record[3])
-
+            return projectInstance
         except mysql.connector.Error as error:
             print(error)
             sys.exit(1)
+        except Exception:
+            return
 
-        return projectInstance
+        
 
     """
     Search the manager by id

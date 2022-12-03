@@ -136,7 +136,7 @@ class AdminController(employeeController.EmployeeController):
             setTeam=AdminPersistenceService.assignManagerToTeam(managerId, teamId)
             if type(setTeam) == list and any("mysql.connector.errors" in str(attr) for attr in setTeam): 
                return f'An error occurred assigning the manager to team due to an invalid value'
-            elif type(setTeam) != list and (setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0):
+            elif type(setTeam) == list and (setTeam[0] == 0 or setTeam[1] == 0 or setTeam[2] == 0 or setTeam[3] == 0):
                 retstr = "employee with ID: " + employeeId + " not found"
                 return retstr
             elif type(setTeam) != list:
